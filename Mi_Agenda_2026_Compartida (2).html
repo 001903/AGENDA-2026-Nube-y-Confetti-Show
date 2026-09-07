@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mi Agenda 2026</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,sans-serif;background:#f7f3ef;color:#342b26}
+.app{max-width:1100px;margin:auto;min-height:100vh}.top{padding:22px 20px 10px;display:flex;justify-content:space-between;align-items:center;gap:15px}.brand{font-size:25px;font-weight:800}.sub{color:#806f65;font-size:13px}
+button,select,input,textarea{font:inherit}.nav{display:flex;gap:8px;align-items:center}.nav button{border:0;background:white;border-radius:12px;padding:9px 13px;cursor:pointer;box-shadow:0 2px 10px #00000010}.nav .add{background:#5b765f;color:#fff;font-weight:700}
+.month{display:flex;align-items:center;justify-content:center;gap:18px;margin:8px 20px 18px}.month h1{margin:0;font-size:30px}.arrow{border:0;background:white;width:38px;height:38px;border-radius:50%;cursor:pointer;box-shadow:0 2px 10px #00000010}
+.calendar{margin:0 20px;background:white;border-radius:20px;overflow:hidden;box-shadow:0 5px 25px #0000000d}.week{display:grid;grid-template-columns:repeat(7,1fr);background:#eadfd5}.week div{text-align:center;padding:10px;font-size:12px;font-weight:800}
+.grid{display:grid;grid-template-columns:repeat(7,1fr)}.day{min-height:115px;border-right:1px solid #eee4dc;border-top:1px solid #eee4dc;padding:8px;cursor:pointer;position:relative}.day:hover{background:#faf7f4}.num{font-weight:800;font-size:13px}.today{outline:2px solid #5b765f;outline-offset:-2px}.event{margin-top:6px;border-radius:8px;padding:5px 6px;background:#e8efe8;font-size:11px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.event strong{display:block}
+.panel{margin:20px;background:white;border-radius:18px;padding:18px;box-shadow:0 5px 25px #0000000d}.panel h2{margin:0 0 12px;font-size:18px}.notes{width:100%;min-height:80px;border:1px solid #ddd1c8;border-radius:12px;padding:10px;resize:vertical}
+.status{text-align:center;font-size:12px;color:#806f65;padding:0 20px 10px}.status.ok{color:#52745a}.status.err{color:#9b3f3f}
+.modal{display:none;position:fixed;inset:0;background:#0007;align-items:center;justify-content:center;padding:15px}.modal.show{display:flex}.box{background:#fff;border-radius:20px;width:min(520px,100%);padding:22px}.box h2{margin-top:0}.field{margin:12px 0}.field label{display:block;font-size:12px;font-weight:700;margin-bottom:5px}.field input,.field select,.field textarea{width:100%;border:1px solid #d8ccc3;border-radius:10px;padding:9px;background:white}.actions{display:flex;justify-content:flex-end;gap:8px;margin-top:16px}.actions button{border:0;border-radius:10px;padding:9px 14px;cursor:pointer}.save{background:#5b765f;color:white;font-weight:700}.delete{background:#f4dddd;color:#8b3333}
+@media(max-width:700px){.top{align-items:flex-start}.brand{font-size:20px}.month h1{font-size:23px}.day{min-height:85px;padding:5px}.event{font-size:9px}.week div{padding:7px 2px;font-size:10px}}
+@media(max-width:700px){
+body{background:#f3eee9}.app{padding-bottom:90px}.top{position:sticky;top:0;z-index:5;background:#f3eee9;padding:14px 14px 8px}
+.sub{font-size:11px}.nav{gap:5px}.nav button{padding:10px 11px;border-radius:12px}.nav .add{font-size:0;width:44px;height:44px}.nav .add:after{content:"＋";font-size:23px}
+.month{margin:8px 12px 14px;gap:12px}.month h1{font-size:25px}.arrow{width:44px;height:44px;font-size:20px}
+.calendar{margin:0 10px;border-radius:16px}.week div{padding:9px 1px;font-size:10px}.day{min-height:92px;padding:7px 5px}.num{font-size:13px}.event{margin-top:4px;padding:5px;font-size:9px;border-radius:7px}.event strong{font-size:9px}
+.panel{margin:14px 10px;border-radius:16px;padding:15px}.notes{min-height:100px;font-size:14px}.modal{padding:10px;align-items:flex-end}.box{border-radius:22px 22px 0 0;padding:20px 17px;width:100%;max-height:92vh;overflow:auto}.box h2{font-size:20px}.field{margin:13px 0}.field label{font-size:13px}.field input,.field select,.field textarea{font-size:16px;padding:12px}.actions{position:sticky;bottom:0;background:white;padding-top:10px}.actions button{padding:12px 15px}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="top">
+    <div><div class="brand">📅 Mi Agenda</div><div class="sub">Septiembre · Octubre · Noviembre · Diciembre 2026</div></div>
+    <div class="nav"><button onclick="go(-1)">‹</button><button onclick="today()">Hoy</button><button onclick="go(1)">›</button><button class="add" onclick="openEvent()">＋ Evento</button></div>
+  </div>
+  <div class="month"><button class="arrow" onclick="go(-1)">‹</button><h1 id="monthTitle"></h1><button class="arrow" onclick="go(1)">›</button></div>
+  <div class="calendar"><div class="week" id="week"></div><div class="grid" id="grid"></div></div>
+  <div style="text-align:center;padding:10px;color:#806f65;font-size:12px">Toca cualquier día para agregar o editar un evento</div>
+  <div class="status" id="status">Conectando con la agenda compartida…</div>
+  <div class="panel">
+    <h2>📝 Notas del mes</h2>
+    <textarea id="notes" class="notes" placeholder="Escribe aquí tus notas, pendientes o recordatorios..."></textarea>
+  </div>
+</div>
+
+<div class="modal" id="modal">
+ <div class="box">
+  <h2 id="modalTitle">Nuevo evento</h2>
+  <div class="field"><label>Fecha</label><input id="date" type="date"></div>
+  <div class="field"><label>Horario</label><input id="time" type="time"></div>
+  <div class="field"><label>Nombre del evento</label><input id="name" placeholder="Ej. Reunión, cita, entrega..."></div>
+  <div class="field"><label>Quién agenda</label><select id="who"><option value="">Selecciona quién agenda</option><option value="Vania">Vania</option><option value="Isabel">Isabel</option><option value="Alizee">Alizee</option></select></div>
+  <div class="field"><label>Notas</label><textarea id="eventNotes" rows="3" placeholder="Detalles del evento..."></textarea></div>
+  <div class="actions"><button type="button" class="delete" id="del" onclick="removeEvent()">Eliminar</button><button type="button" onclick="closeModal()">Cancelar</button><button type="button" class="save" id="saveBtn" onclick="saveEvent()">Guardar</button></div>
+ </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL="https://emvzdewojqepmuhnmxqv.supabase.co";
+const SUPABASE_KEY="sb_publishable_1gAnnpuYenWJOuZOQ9pjIQ_Fn-A-sAG";
+const supabaseClient=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+
+const months=["Septiembre","Octubre","Noviembre","Diciembre"], names=["Dom","Lun","Mar","Mié","Jue","Vie","Sáb"];
+let month=8,year=2026,editing=null,cacheEvents=[];
+
+const statusEl=document.getElementById("status");
+const notesEl=document.getElementById("notes");
+
+function setStatus(text,ok=false,err=false){
+  statusEl.textContent=text;
+  statusEl.className="status"+(ok?" ok":"")+(err?" err":"");
+}
+function esc(s){return String(s||"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]))}
+
+async function loadEvents(){
+  const {data,error}=await supabaseClient.from("events").select("*").order("event_date").order("event_time");
+  if(error){setStatus("No se pudo conectar con la agenda compartida.",false,true);console.error(error);return false;}
+  cacheEvents=data||[];
+  return true;
+}
+async function loadNotes(){
+  const {data,error}=await supabaseClient.from("monthly_notes").select("notes").eq("year",year).eq("month",month+1).maybeSingle();
+  if(error){console.error(error);return;}
+  notesEl.value=data?.notes||"";
+}
+let notesTimer=null;
+notesEl.addEventListener("input",()=>{
+  clearTimeout(notesTimer);
+  notesTimer=setTimeout(saveNotes,700);
+});
+async function saveNotes(){
+  const text=notesEl.value;
+  const {error}=await supabaseClient.from("monthly_notes").upsert(
+    {year:year,month:month+1,notes:text},
+    {onConflict:"year,month"}
+  );
+  if(error){setStatus("No se pudieron guardar las notas.",false,true);console.error(error);}
+  else setStatus("Notas guardadas en la agenda compartida.",true);
+}
+
+async function render(){
+  monthTitle.textContent=months[month-8]+" "+year;
+  week.innerHTML=names.map(x=>`<div>${x}</div>`).join("");
+  grid.innerHTML="";
+  const first=new Date(year,month,1).getDay(),days=new Date(year,month+1,0).getDate();
+  for(let i=0;i<first;i++)grid.innerHTML+="<div class='day'></div>";
+  const now=new Date();
+  for(let d=1;d<=days;d++){
+    const ds=`${year}-${String(month+1).padStart(2,"0")}-${String(d).padStart(2,"0")}`;
+    const cls=(now.getFullYear()==year&&now.getMonth()==month&&now.getDate()==d)?"day today":"day";
+    const ev=cacheEvents.filter(e=>e.event_date===ds).sort((x,y)=>(x.event_time||"").localeCompare(y.event_time||""));
+    grid.innerHTML+=`<div class="${cls}" onclick="openEvent('${ds}')"><div class="num">${d}</div>${ev.map(e=>`<div class="event" onclick="event.stopPropagation();openEvent('${ds}','${e.id}')"><strong>${e.event_time?e.event_time.slice(0,5)+" ":""}${esc(e.event_name)}</strong>${esc(e.scheduled_by||"")}</div>`).join("")}</div>`;
+  }
+  await loadNotes();
+}
+
+async function refresh(){
+  setStatus("Actualizando agenda…");
+  const ok=await loadEvents();
+  if(ok){await render();setStatus("Agenda compartida y actualizada.",true);}
+}
+function go(n){
+  month+=n;
+  if(month<8){month=11;year=2026}
+  if(month>11){month=8;year=2026}
+  refresh();
+}
+function today(){year=2026;month=8;refresh()}
+
+function openEvent(ds=null,id=null){
+  editing=id;
+  const e=id?cacheEvents.find(x=>String(x.id)===String(id)):null;
+  modalTitle.textContent=e?"Editar evento":"Nuevo evento";
+  del.style.display=e?"block":"none";
+  date.value=e?e.event_date:(ds||`${year}-${String(month+1).padStart(2,"0")}-01`);
+  time.value=e?.event_time?e.event_time.slice(0,5):"";
+  name.value=e?.event_name||"";
+  who.value=e?.scheduled_by||"";
+  eventNotes.value=e?.notes||"";
+  modal.classList.add("show");
+}
+function closeModal(){modal.classList.remove("show")}
+
+async function saveEvent(){
+  const eventDate=date.value,eventTime=time.value,eventName=name.value.trim(),eventWho=who.value,eventExtra=eventNotes.value.trim();
+  if(!eventDate){alert("Selecciona la fecha.");return}
+  if(!eventName){alert("Escribe el nombre del evento.");name.focus();return}
+  if(!eventWho){alert("Selecciona quién agenda.");who.focus();return}
+
+  saveBtn.disabled=true;saveBtn.textContent="Guardando…";
+  let result;
+  const payload={event_date:eventDate,event_time:eventTime||null,event_name:eventName,scheduled_by:eventWho,notes:eventExtra,updated_at:new Date().toISOString()};
+  if(editing){
+    result=await supabaseClient.from("events").update(payload).eq("id",editing);
+  }else{
+    result=await supabaseClient.from("events").insert(payload);
+  }
+  saveBtn.disabled=false;saveBtn.textContent="Guardar";
+
+  if(result.error){
+    alert("No se pudo guardar. Revisa que hayas ejecutado el SQL de configuración en Supabase.");
+    console.error(result.error);return;
+  }
+  closeModal();
+  const d=new Date(eventDate+"T12:00:00");month=d.getMonth();year=2026;
+  await refresh();
+}
+
+async function removeEvent(){
+  if(!editing)return;
+  if(!confirm("¿Eliminar este evento?"))return;
+  const {error}=await supabaseClient.from("events").delete().eq("id",editing);
+  if(error){alert("No se pudo eliminar el evento.");console.error(error);return}
+  closeModal();
+  editing=null;
+  await refresh();
+}
+
+window.addEventListener("online",refresh);
+refresh();
+</script>
+</body>
+</html>
