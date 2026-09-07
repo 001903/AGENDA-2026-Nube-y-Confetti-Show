@@ -1,744 +1,1868 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
 <title>Mi Agenda 2026</title>
+
 <style>
-*{box-sizing:border-box}
-body{margin:0;font-family:system-ui,-apple-system,Segoe UI,sans-serif;background:#f7f3ef;color:#342b26}
-.app{max-width:1100px;margin:auto;min-height:100vh}
-.top{padding:22px 20px 10px;display:flex;justify-content:space-between;align-items:center;gap:15px}
-.brand{font-size:25px;font-weight:800}
-.sub{color:#806f65;font-size:13px}
-button,select,input,textarea{font:inherit}
-.nav{display:flex;gap:8px;align-items:center}
-.nav button{border:0;background:white;border-radius:12px;padding:9px 13px;cursor:pointer;box-shadow:0 2px 10px #00000010}
-.nav .add{background:#5b765f;color:#fff;font-weight:700}
-.month{display:flex;align-items:center;justify-content:center;gap:18px;margin:8px 20px 18px}
-.month h1{margin:0;font-size:30px}
-.arrow{border:0;background:white;width:38px;height:38px;border-radius:50%;cursor:pointer;box-shadow:0 2px 10px #00000010}
-.calendar{margin:0 20px;background:white;border-radius:20px;overflow:hidden;box-shadow:0 5px 25px #0000000d}
-.week{display:grid;grid-template-columns:repeat(7,1fr);background:#eadfd5}
-.week div{text-align:center;padding:10px;font-size:12px;font-weight:800}
-.grid{display:grid;grid-template-columns:repeat(7,1fr)}
-.day{min-height:115px;border-right:1px solid #eee4dc;border-top:1px solid #eee4dc;padding:8px;cursor:pointer;position:relative}
-.day:hover{background:#faf7f4}
-.num{font-weight:800;font-size:13px}
-.today{outline:2px solid #5b765f;outline-offset:-2px}
-.event{margin-top:6px;border-radius:8px;padding:5px 6px;background:#e8efe8;font-size:11px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
-.event strong{display:block}
-.panel{margin:20px;background:white;border-radius:18px;padding:18px;box-shadow:0 5px 25px #0000000d}
-.panel h2{margin:0 0 12px;font-size:18px}
-.notes{width:100%;min-height:80px;border:1px solid #ddd1c8;border-radius:12px;padding:10px;resize:vertical}
-.status{text-align:center;font-size:12px;color:#806f65;padding:0 20px 10px}
-.status.ok{color:#52745a}
-.status.err{color:#9b3f3f}
-.modal{display:none;position:fixed;inset:0;background:#0007;align-items:center;justify-content:center;padding:15px}
-.modal.show{display:flex}
-.box{background:#fff;border-radius:20px;width:min(520px,100%);padding:22px}
-.box h2{margin-top:0}
-.field{margin:12px 0}
-.field label{display:block;font-size:12px;font-weight:700;margin-bottom:5px}
-.field input,.field select,.field textarea{width:100%;border:1px solid #d8ccc3;border-radius:10px;padding:9px;background:white}
-.actions{display:flex;justify-content:flex-end;gap:8px;margin-top:16px}
-.actions button{border:0;border-radius:10px;padding:9px 14px;cursor:pointer}
-.save{background:#5b765f;color:white;font-weight:700}
-.delete{background:#f4dddd;color:#8b3333}
+
+*{
+  box-sizing:border-box;
+}
+
+body{
+  margin:0;
+  font-family:system-ui,-apple-system,Segoe UI,sans-serif;
+  background:#f7f3ef;
+  color:#342b26;
+}
+
+.app{
+  max-width:1100px;
+  margin:auto;
+  min-height:100vh;
+}
+
+.top{
+  padding:22px 20px 10px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:15px;
+}
+
+.brand{
+  font-size:25px;
+  font-weight:800;
+}
+
+.sub{
+  color:#806f65;
+  font-size:13px;
+}
+
+.nav{
+  display:flex;
+  gap:8px;
+  align-items:center;
+}
+
+button,
+select,
+input,
+textarea{
+  font:inherit;
+}
+
+.nav button{
+  border:0;
+  background:#fff;
+  border-radius:12px;
+  padding:9px 13px;
+  cursor:pointer;
+  box-shadow:0 2px 10px #00000010;
+}
+
+.nav .add{
+  background:#5b765f;
+  color:#fff;
+  font-weight:700;
+}
+
+.month{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:18px;
+  margin:8px 20px 18px;
+}
+
+.month h1{
+  margin:0;
+  font-size:30px;
+}
+
+.arrow{
+  border:0;
+  background:#fff;
+  width:38px;
+  height:38px;
+  border-radius:50%;
+  cursor:pointer;
+  box-shadow:0 2px 10px #00000010;
+}
+
+.theme-badge{
+  text-align:center;
+  margin:0 20px 10px;
+  font-size:14px;
+  font-weight:700;
+}
+
+.calendar{
+  margin:0 20px;
+  background:#fff;
+  border-radius:20px;
+  overflow:hidden;
+  box-shadow:0 5px 25px #0000000d;
+}
+
+.week{
+  display:grid;
+  grid-template-columns:repeat(7,1fr);
+  background:#eadfd5;
+}
+
+.week div{
+  text-align:center;
+  padding:10px;
+  font-size:12px;
+  font-weight:800;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(7,1fr);
+}
+
+.day{
+  min-height:115px;
+  border-right:1px solid #eee4dc;
+  border-top:1px solid #eee4dc;
+  padding:8px;
+  cursor:pointer;
+  position:relative;
+}
+
+.day:hover{
+  background:#faf7f4;
+}
+
+.num{
+  font-weight:800;
+  font-size:13px;
+}
+
+.today{
+  outline:2px solid #5b765f;
+  outline-offset:-2px;
+}
+
+.event{
+  margin-top:6px;
+  border-radius:8px;
+  padding:5px 6px;
+  background:#e8efe8;
+  font-size:11px;
+  overflow:hidden;
+  white-space:nowrap;
+  text-overflow:ellipsis;
+}
+
+.event strong{
+  display:block;
+}
+
+.hint{
+  text-align:center;
+  padding:10px;
+  color:#806f65;
+  font-size:12px;
+}
+
+.status{
+  text-align:center;
+  font-size:12px;
+  padding:0 20px 10px;
+  color:#806f65;
+  min-height:28px;
+}
+
+.status.ok{
+  color:#52745a;
+}
+
+.status.err{
+  color:#9b3f3f;
+}
+
+.panel{
+  margin:20px;
+  background:#fff;
+  border-radius:18px;
+  padding:18px;
+  box-shadow:0 5px 25px #0000000d;
+}
+
+.panel h2{
+  margin:0 0 12px;
+  font-size:18px;
+}
+
+.notes{
+  width:100%;
+  min-height:80px;
+  border:1px solid #ddd1c8;
+  border-radius:12px;
+  padding:10px;
+  resize:vertical;
+}
+
+.modal{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:#0007;
+  align-items:center;
+  justify-content:center;
+  padding:15px;
+  z-index:20;
+}
+
+.modal.show{
+  display:flex;
+}
+
+.box{
+  background:#fff;
+  border-radius:20px;
+  width:min(520px,100%);
+  padding:22px;
+}
+
+.box h2{
+  margin-top:0;
+}
+
+.field{
+  margin:12px 0;
+}
+
+.field label{
+  display:block;
+  font-size:12px;
+  font-weight:700;
+  margin-bottom:5px;
+}
+
+.field input,
+.field select,
+.field textarea{
+  width:100%;
+  border:1px solid #d8ccc3;
+  border-radius:10px;
+  padding:9px;
+  background:#fff;
+}
+
+.actions{
+  display:flex;
+  justify-content:flex-end;
+  gap:8px;
+  margin-top:16px;
+}
+
+.actions button{
+  border:0;
+  border-radius:10px;
+  padding:9px 14px;
+  cursor:pointer;
+}
+
+.save{
+  background:#5b765f;
+  color:#fff;
+  font-weight:700;
+}
+
+.save:disabled{
+  opacity:.6;
+  cursor:wait;
+}
+
+.delete{
+  background:#f4dddd;
+  color:#8b3333;
+}
+
+
+/* CELULAR */
 
 @media(max-width:700px){
-.top{align-items:flex-start}
-.brand{font-size:20px}
-.month h1{font-size:23px}
-.day{min-height:85px;padding:5px}
-.event{font-size:9px}
-.week div{padding:7px 2px;font-size:10px}
-body{background:#f3eee9}
-.app{padding-bottom:90px}
-.top{position:sticky;top:0;z-index:5;background:#f3eee9;padding:14px 14px 8px}
-.sub{font-size:11px}
-.nav{gap:5px}
-.nav button{padding:10px 11px;border-radius:12px}
-.nav .add{font-size:0;width:44px;height:44px}
-.nav .add:after{content:"＋";font-size:23px}
-.month{margin:8px 12px 14px;gap:12px}
-.month h1{font-size:25px}
-.arrow{width:44px;height:44px;font-size:20px}
-.calendar{margin:0 10px;border-radius:16px}
-.week div{padding:9px 1px;font-size:10px}
-.day{min-height:92px;padding:7px 5px}
-.num{font-size:13px}
-.event{margin-top:4px;padding:5px;font-size:9px;border-radius:7px}
-.event strong{font-size:9px}
-.panel{margin:14px 10px;border-radius:16px;padding:15px}
-.notes{min-height:100px;font-size:14px}
-.modal{padding:10px;align-items:flex-end}
-.box{border-radius:22px 22px 0 0;padding:20px 17px;width:100%;max-height:92vh;overflow:auto}
-.box h2{font-size:20px}
-.field{margin:13px 0}
-.field label{font-size:13px}
-.field input,.field select,.field textarea{font-size:16px;padding:12px}
-.actions{position:sticky;bottom:0;background:white;padding-top:10px}
-.actions button{padding:12px 15px}
+
+  body{
+    background:#f3eee9;
+  }
+
+  .app{
+    padding-bottom:70px;
+  }
+
+  .top{
+    position:sticky;
+    top:0;
+    z-index:10;
+    background:#f3eee9;
+    padding:14px;
+  }
+
+  .brand{
+    font-size:20px;
+  }
+
+  .sub{
+    font-size:11px;
+  }
+
+  .nav{
+    gap:5px;
+  }
+
+  .nav button{
+    padding:10px 11px;
+  }
+
+  .nav .add{
+    font-size:0;
+    width:44px;
+    height:44px;
+  }
+
+  .nav .add:after{
+    content:"＋";
+    font-size:23px;
+  }
+
+  .month{
+    margin:8px 12px 14px;
+    gap:12px;
+  }
+
+  .month h1{
+    font-size:25px;
+  }
+
+  .arrow{
+    width:44px;
+    height:44px;
+    font-size:20px;
+  }
+
+  .calendar{
+    margin:0 10px;
+    border-radius:16px;
+  }
+
+  .week div{
+    padding:9px 1px;
+    font-size:10px;
+  }
+
+  .day{
+    min-height:92px;
+    padding:7px 5px;
+  }
+
+  .num{
+    font-size:13px;
+  }
+
+  .event{
+    margin-top:4px;
+    padding:5px;
+    font-size:9px;
+    border-radius:7px;
+  }
+
+  .event strong{
+    font-size:9px;
+  }
+
+  .panel{
+    margin:14px 10px;
+    border-radius:16px;
+    padding:15px;
+  }
+
+  .notes{
+    min-height:100px;
+    font-size:14px;
+  }
+
+  .modal{
+    padding:10px;
+    align-items:flex-end;
+  }
+
+  .box{
+    border-radius:22px 22px 0 0;
+    padding:20px 17px;
+    width:100%;
+    max-height:92vh;
+    overflow:auto;
+  }
+
+  .box h2{
+    font-size:20px;
+  }
+
+  .field{
+    margin:13px 0;
+  }
+
+  .field label{
+    font-size:13px;
+  }
+
+  .field input,
+  .field select,
+  .field textarea{
+    font-size:16px;
+    padding:12px;
+  }
+
+  .actions{
+    position:sticky;
+    bottom:0;
+    background:#fff;
+    padding-top:10px;
+  }
+
+  .actions button{
+    padding:12px 15px;
+  }
+
 }
+
 </style>
 </head>
 
+
 <body>
+
 <div class="app">
 
-<div class="top">
-<div>
-<div class="brand">📅 Mi Agenda</div>
-<div class="sub">Septiembre · Octubre · Noviembre · Diciembre 2026</div>
+
+  <!-- ENCABEZADO -->
+
+  <div class="top">
+
+    <div>
+
+      <div class="brand">
+        📅 Mi Agenda 2026
+      </div>
+
+      <div class="sub">
+        Agenda compartida · Septiembre a Diciembre
+      </div>
+
+    </div>
+
+
+    <div class="nav">
+
+      <button
+        type="button"
+        onclick="changeMonth(-1)">
+        ‹
+      </button>
+
+      <button
+        type="button"
+        onclick="goToday()">
+        Hoy
+      </button>
+
+      <button
+        type="button"
+        onclick="changeMonth(1)">
+        ›
+      </button>
+
+      <button
+        type="button"
+        class="add"
+        onclick="openEvent()">
+        ＋ Evento
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <!-- MES -->
+
+  <div class="month">
+
+    <button
+      type="button"
+      class="arrow"
+      onclick="changeMonth(-1)">
+      ‹
+    </button>
+
+    <h1 id="monthTitle"></h1>
+
+    <button
+      type="button"
+      class="arrow"
+      onclick="changeMonth(1)">
+      ›
+    </button>
+
+  </div>
+
+
+  <!-- TEMA -->
+
+  <div
+    id="themeBadge"
+    class="theme-badge">
+  </div>
+
+
+  <!-- CALENDARIO -->
+
+  <div class="calendar">
+
+    <div
+      class="week"
+      id="week">
+    </div>
+
+    <div
+      class="grid"
+      id="grid">
+    </div>
+
+  </div>
+
+
+  <div class="hint">
+    Toca cualquier día para agregar o editar un evento
+  </div>
+
+
+  <!-- ESTADO DE CONEXIÓN -->
+
+  <div
+    class="status"
+    id="status">
+    Conectando con la agenda compartida…
+  </div>
+
+
+  <!-- NOTAS -->
+
+  <div class="panel">
+
+    <h2>
+      📝 Notas del mes
+    </h2>
+
+    <textarea
+      id="notes"
+      class="notes"
+      placeholder="Escribe aquí tus notas, pendientes o recordatorios...">
+    </textarea>
+
+  </div>
+
+
 </div>
 
-<div class="nav">
-<button onclick="go(-1)">‹</button>
-<button onclick="today()">Hoy</button>
-<button onclick="go(1)">›</button>
-<button class="add" onclick="openEvent()">＋ Evento</button>
-</div>
+
+<!-- VENTANA PARA EVENTO -->
+
+<div
+  class="modal"
+  id="modal">
+
+  <div class="box">
+
+    <h2 id="modalTitle">
+      Nuevo evento
+    </h2>
+
+
+    <div class="field">
+
+      <label for="date">
+        Fecha
+      </label>
+
+      <input
+        id="date"
+        type="date"
+        min="2026-09-01"
+        max="2026-12-31">
+
+    </div>
+
+
+    <div class="field">
+
+      <label for="time">
+        Horario
+      </label>
+
+      <input
+        id="time"
+        type="time">
+
+    </div>
+
+
+    <div class="field">
+
+      <label for="name">
+        Nombre del evento
+      </label>
+
+      <input
+        id="name"
+        placeholder="Ej. Reunión, cita, entrega...">
+
+    </div>
+
+
+    <div class="field">
+
+      <label for="who">
+        Quién agenda
+      </label>
+
+      <select id="who">
+
+        <option value="">
+          Selecciona quién agenda
+        </option>
+
+        <option value="Vania">
+          Vania
+        </option>
+
+        <option value="Isabel">
+          Isabel
+        </option>
+
+        <option value="Alizee">
+          Alizee
+        </option>
+
+      </select>
+
+    </div>
+
+
+    <div class="field">
+
+      <label for="eventNotes">
+        Notas
+      </label>
+
+      <textarea
+        id="eventNotes"
+        rows="3"
+        placeholder="Detalles del evento...">
+      </textarea>
+
+    </div>
+
+
+    <div class="actions">
+
+      <button
+        type="button"
+        class="delete"
+        id="deleteBtn"
+        onclick="deleteEvent()">
+        Eliminar
+      </button>
+
+      <button
+        type="button"
+        onclick="closeModal()">
+        Cancelar
+      </button>
+
+      <button
+        type="button"
+        class="save"
+        id="saveBtn"
+        onclick="saveEvent()">
+        Guardar
+      </button>
+
+    </div>
+
+  </div>
+
 </div>
 
-<div class="month">
-<button class="arrow" onclick="go(-1)">‹</button>
-<h1 id="monthTitle"></h1>
-<button class="arrow" onclick="go(1)">›</button>
-</div>
 
-<div class="calendar">
-<div class="week" id="week"></div>
-<div class="grid" id="grid"></div>
-</div>
-
-<div style="text-align:center;padding:10px;color:#806f65;font-size:12px">
-Toca cualquier día para agregar o editar un evento
-</div>
-
-<div class="status" id="status">
-Conectando con la agenda compartida…
-</div>
-
-<div class="panel">
-<h2>📝 Notas del mes</h2>
-<textarea id="notes" class="notes" placeholder="Escribe aquí tus notas, pendientes o recordatorios..."></textarea>
-</div>
-
-</div>
-
-<div class="modal" id="modal">
-<div class="box">
-
-<h2 id="modalTitle">Nuevo evento</h2>
-
-<div class="field">
-<label>Fecha</label>
-<input id="date" type="date">
-</div>
-
-<div class="field">
-<label>Horario</label>
-<input id="time" type="time">
-</div>
-
-<div class="field">
-<label>Nombre del evento</label>
-<input id="name" placeholder="Ej. Reunión, cita, entrega...">
-</div>
-
-<div class="field">
-<label>Quién agenda</label>
-<select id="who">
-<option value="">Selecciona quién agenda</option>
-<option value="Vania">Vania</option>
-<option value="Isabel">Isabel</option>
-<option value="Alizee">Alizee</option>
-</select>
-</div>
-
-<div class="field">
-<label>Notas</label>
-<textarea id="eventNotes" rows="3" placeholder="Detalles del evento..."></textarea>
-</div>
-
-<div class="actions">
-<button type="button" class="delete" id="del" onclick="removeEvent()">Eliminar</button>
-<button type="button" onclick="closeModal()">Cancelar</button>
-<button type="button" class="save" id="saveBtn" onclick="saveEvent()">Guardar</button>
-</div>
-
-</div>
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
 
-const SUPABASE_URL="https://emvzdewojqepmuhnmxqv.supabase.co";
+/* =========================================
+   CONEXIÓN CON SUPABASE
+   ========================================= */
 
-const SUPABASE_KEY="sb_publishable_1gAnnpuYenWJOuZOQ9pjIQ_Fn-A-sAG";
+const SUPABASE_URL =
+"https://emvzdewojqepmuhnmxqv.supabase.co";
 
-const supabaseClient=supabase.createClient(
-SUPABASE_URL,
-SUPABASE_KEY
-);
+const SUPABASE_KEY =
+"sb_publishable_1gAnnpuYenWJOuZOQ9pjIQ_Fn-A-sAG";
 
-const months=[
-"Septiembre",
-"Octubre",
-"Noviembre",
-"Diciembre"
+const API =
+SUPABASE_URL + "/rest/v1";
+
+
+/* =========================================
+   CONFIGURACIÓN
+   ========================================= */
+
+const months = [
+  "Septiembre",
+  "Octubre",
+  "Noviembre",
+  "Diciembre"
 ];
 
-const names=[
-"Dom",
-"Lun",
-"Mar",
-"Mié",
-"Jue",
-"Vie",
-"Sáb"
+const weekdays = [
+  "Dom",
+  "Lun",
+  "Mar",
+  "Mié",
+  "Jue",
+  "Vie",
+  "Sáb"
 ];
 
-let month=8;
-let year=2026;
-let editing=null;
-let cacheEvents=[];
-
-const $=id=>document.getElementById(id);
-
-const statusEl=$("status");
-const notesEl=$("notes");
-const modalEl=$("modal");
-const modalTitleEl=$("modalTitle");
-const dateEl=$("date");
-const timeEl=$("time");
-const nameEl=$("name");
-const whoEl=$("who");
-const eventNotesEl=$("eventNotes");
-const saveBtnEl=$("saveBtn");
-const delBtnEl=$("del");
-const monthTitleEl=$("monthTitle");
-const weekEl=$("week");
-const gridEl=$("grid");
-
-function setStatus(text,ok=false,err=false){
-
-statusEl.textContent=text;
-
-statusEl.className=
-"status"+
-(ok?" ok":"")+
-(err?" err":"");
-
-}
-
-function esc(s){
-
-return String(s||"").replace(
-/[&<>"']/g,
-c=>({
-"&":"&amp;",
-"<":"&lt;",
-">":"&gt;",
-'"':"&quot;",
-"'":"&#039;"
-}[c])
-);
-
-}
-
-async function loadEvents(){
-
-const {data,error}=await supabaseClient
-.from("events")
-.select("*")
-.order("event_date")
-.order("event_time");
-
-if(error){
-
-setStatus(
-"No se pudo conectar con la agenda compartida.",
-false,
-true
-);
-
-console.error(error);
-
-return false;
-
-}
-
-cacheEvents=data||[];
-
-return true;
-
-}
-
-async function loadNotes(){
-
-const {data,error}=await supabaseClient
-.from("monthly_notes")
-.select("notes")
-.eq("year",year)
-.eq("month",month+1)
-.maybeSingle();
-
-if(error){
-
-console.error(error);
-
-return;
-
-}
-
-notesEl.value=data?.notes||"";
-
-}
-
-let notesTimer=null;
-
-notesEl.addEventListener("input",()=>{
-
-clearTimeout(notesTimer);
-
-notesTimer=setTimeout(saveNotes,700);
-
-});
-
-async function saveNotes(){
-
-const text=notesEl.value;
-
-const {error}=await supabaseClient
-.from("monthly_notes")
-.upsert(
-{
-year:year,
-month:month+1,
-notes:text
-},
-{
-onConflict:"year,month"
-}
-);
-
-if(error){
-
-setStatus(
-"No se pudieron guardar las notas.",
-false,
-true
-);
-
-console.error(error);
-
-}else{
-
-setStatus(
-"Notas guardadas en la agenda compartida.",
-true
-);
-
-}
-
-}
-
-async function render(){
-
-monthTitleEl.textContent=
-months[month-8]+" "+year;
-
-weekEl.innerHTML=
-names.map(x=>`<div>${x}</div>`).join("");
-
-gridEl.innerHTML="";
-
-const first=
-new Date(year,month,1).getDay();
-
-const days=
-new Date(year,month+1,0).getDate();
-
-for(let i=0;i<first;i++){
-
-gridEl.innerHTML+=
-"<div class='day'></div>";
-
-}
-
-const now=new Date();
-
-for(let d=1;d<=days;d++){
-
-const ds=
-`${year}-${String(month+1).padStart(2,"0")}-${String(d).padStart(2,"0")}`;
-
-const cls=
-(
-now.getFullYear()==year &&
-now.getMonth()==month &&
-now.getDate()==d
-)
-?
-"day today"
-:
-"day";
-
-const ev=
-cacheEvents
-.filter(e=>e.event_date===ds)
-.sort(
-(x,y)=>
-(x.event_time||"")
-.localeCompare(y.event_time||"")
-);
-
-gridEl.innerHTML+=`
-
-<div class="${cls}" onclick="openEvent('${ds}')">
-
-<div class="num">${d}</div>
-
-${ev.map(e=>`
-
-<div class="event"
-onclick="event.stopPropagation();openEvent('${ds}','${e.id}')">
-
-<strong>
-${e.event_time?e.event_time.slice(0,5)+" ":""}
-${esc(e.event_name)}
-</strong>
-
-${esc(e.scheduled_by||"")}
-
-</div>
-
-`).join("")}
-
-</div>
-
-`;
-
-}
-
-await loadNotes();
-
-}
-
-async function refresh(){
-
-setStatus("Actualizando agenda…");
-
-const ok=await loadEvents();
-
-if(ok){
-
-await render();
-
-setStatus(
-"Agenda compartida y actualizada.",
-true
-);
-
-}
-
-}
-
-function go(n){
-
-month+=n;
-
-if(month<8){
-
-month=11;
-year=2026;
-
-}
-
-if(month>11){
-
-month=8;
-year=2026;
-
-}
-
-refresh();
-
-}
-
-function today(){
-
-year=2026;
-month=8;
-
-refresh();
-
-}
-
-function openEvent(ds=null,id=null){
-
-editing=id;
-
-const e=
-id
-?
-cacheEvents.find(
-x=>String(x.id)===String(id)
-)
-:
-null;
-
-modalTitleEl.textContent=
-e
-?
-"Editar evento"
-:
-"Nuevo evento";
-
-delBtn.style.display=
-e
-?
-"block"
-:
-"none";
-
-dateEl.value=
-e
-?
-e.event_date
-:
-(ds||`${year}-${String(month+1).padStart(2,"0")}-01`);
-
-timeEl.value=
-e?.event_time
-?
-e.event_time.slice(0,5)
-:
-"";
-
-nameEl.value=
-e?.event_name||"";
-
-whoEl.value=
-e?.scheduled_by||"";
-
-eventNotesEl.value=
-e?.notes||"";
-
-modalEl.classList.add("show");
-
-}
-
-function closeModal(){
-
-modalEl.classList.remove("show");
-
-}
-
-async function saveEvent(){
-
-try{
-
-const eventDate=dateEl.value;
-const eventTime=timeEl.value;
-const eventName=nameEl.value.trim();
-const eventWho=whoEl.value;
-const eventExtra=eventNotesEl.value.trim();
-
-if(!eventDate){
-
-setStatus(
-"Falta seleccionar la fecha.",
-false,
-true
-);
-
-return;
-
-}
-
-if(!eventName){
-
-setStatus(
-"Falta escribir el nombre del evento.",
-false,
-true
-);
-
-nameEl.focus();
-
-return;
-
-}
-
-if(!eventWho){
-
-setStatus(
-"Falta seleccionar quién agenda.",
-false,
-true
-);
-
-whoEl.focus();
-
-return;
-
-}
-
-saveBtnEl.disabled=true;
-
-saveBtnEl.textContent="Guardando…";
-
-setStatus(
-"Guardando evento en la nube…"
-);
-
-const payload={
-
-event_date:eventDate,
-
-event_time:eventTime||null,
-
-event_name:eventName,
-
-scheduled_by:eventWho,
-
-notes:eventExtra,
-
-updated_at:new Date().toISOString()
+const themes = {
+
+  8:[
+    "🍂",
+    "Otoño"
+  ],
+
+  9:[
+    "🎃",
+    "Halloween"
+  ],
+
+  10:[
+    "🍁",
+    "Otoño acogedor"
+  ],
+
+  11:[
+    "🎄",
+    "Navidad"
+  ]
 
 };
 
-let result;
 
-if(editing){
+let month = 8;
 
-result=
-await supabaseClient
-.from("events")
-.update(payload)
-.eq("id",editing);
+let year = 2026;
 
-}else{
+let events = [];
 
-result=
-await supabaseClient
-.from("events")
-.insert(payload);
+let editingId = null;
 
-}
+let notesTimer = null;
 
-if(result.error){
 
-const e=result.error;
+/* =========================================
+   ELEMENTOS
+   ========================================= */
 
-const detail=[
-e.message,
-e.code,
-e.details,
-e.hint
-]
-.filter(Boolean)
-.join(" | ");
+const $ = id =>
+document.getElementById(id);
 
-setStatus(
-"ERROR AL GUARDAR: "+detail,
-false,
-true
-);
 
-console.error(
-"Supabase save error:",
-e
-);
+/* =========================================
+   HEADERS SUPABASE
+   ========================================= */
 
-return;
+function headers(extra = {}){
+
+  return Object.assign(
+
+    {
+      "apikey":SUPABASE_KEY,
+
+      "Authorization":
+      "Bearer " + SUPABASE_KEY,
+
+      "Content-Type":
+      "application/json"
+
+    },
+
+    extra
+
+  );
 
 }
 
-closeModal();
 
-const d=
-new Date(
-eventDate+"T12:00:00"
-);
+/* =========================================
+   MENSAJES
+   ========================================= */
 
-month=d.getMonth();
+function setStatus(
+  text,
+  type = ""
+){
 
-year=2026;
+  const el =
+  $("status");
 
-await refresh();
+  el.textContent =
+  text;
 
-setStatus(
-"✅ Evento guardado y compartido.",
-true
-);
-
-}catch(err){
-
-console.error(
-"Unexpected save error:",
-err
-);
-
-setStatus(
-"ERROR: "+(err?.message||String(err)),
-false,
-true
-);
-
-}finally{
-
-saveBtnEl.disabled=false;
-
-saveBtnEl.textContent="Guardar";
+  el.className =
+  "status" +
+  (type ? " " + type : "");
 
 }
 
+
+/* =========================================
+   SEGURIDAD PARA MOSTRAR TEXTO
+   ========================================= */
+
+function esc(value){
+
+  return String(
+    value ?? ""
+  ).replace(
+    /[&<>"']/g,
+
+    function(c){
+
+      return {
+
+        "&":"&amp;",
+        "<":"&lt;",
+        ">":"&gt;",
+        '"':"&quot;",
+        "'":"&#039;"
+
+      }[c];
+
+    }
+
+  );
+
 }
 
-async function removeEvent(){
 
-if(!editing)return;
+/* =========================================
+   VALIDAR FECHA
+   ========================================= */
 
-if(!confirm("¿Eliminar este evento?"))return;
+function validDate(value){
 
-const {error}=
-await supabaseClient
-.from("events")
-.delete()
-.eq("id",editing);
+  return /^2026-(09|10|11|12)-([0-2][0-9]|3[01])$/
+  .test(value);
 
-if(error){
+}
 
-setStatus(
-"ERROR AL ELIMINAR: "+
-(error.message||String(error)),
-false,
-true
+
+/* =========================================
+   PETICIÓN A SUPABASE
+   ========================================= */
+
+async function api(
+  path,
+  options = {}
+){
+
+  const response =
+  await fetch(
+
+    API + path,
+
+    Object.assign(
+
+      {
+        headers:headers()
+      },
+
+      options
+
+    )
+
+  );
+
+
+  let data = null;
+
+
+  const text =
+  await response.text();
+
+
+  if(text){
+
+    try{
+
+      data =
+      JSON.parse(text);
+
+    }catch{
+
+      data =
+      text;
+
+    }
+
+  }
+
+
+  if(!response.ok){
+
+    const error =
+    new Error(
+
+      data?.message ||
+      data?.hint ||
+      ("Error HTTP " + response.status)
+
+    );
+
+
+    error.code =
+    data?.code;
+
+    error.details =
+    data?.details;
+
+    error.hint =
+    data?.hint;
+
+
+    throw error;
+
+  }
+
+
+  return data;
+
+}
+
+
+/* =========================================
+   CARGAR EVENTOS
+   ========================================= */
+
+async function loadEvents(){
+
+  try{
+
+    events =
+    await api(
+      "/events?select=*&order=event_date.asc,event_time.asc"
+    ) || [];
+
+
+    return true;
+
+  }catch(error){
+
+    console.error(
+      "Error cargando eventos:",
+      error
+    );
+
+
+    setStatus(
+      "❌ No se pudo conectar con la agenda compartida: " +
+      error.message,
+      "err"
+    );
+
+
+    return false;
+
+  }
+
+}
+
+
+/* =========================================
+   CARGAR NOTAS
+   ========================================= */
+
+async function loadNotes(){
+
+  try{
+
+    const data =
+    await api(
+
+      `/monthly_notes?select=notes&year=eq.${year}&month=eq.${month+1}&limit=1`
+
+    );
+
+
+    $("notes").value =
+    data?.[0]?.notes || "";
+
+
+  }catch(error){
+
+    console.error(
+      "Error cargando notas:",
+      error
+    );
+
+  }
+
+}
+
+
+/* =========================================
+   DIBUJAR CALENDARIO
+   ========================================= */
+
+async function render(){
+
+  $("monthTitle").textContent =
+  months[month - 8] +
+  " " +
+  year;
+
+
+  $("week").innerHTML =
+  weekdays
+  .map(
+    day => `<div>${day}</div>`
+  )
+  .join("");
+
+
+  const theme =
+  themes[month];
+
+
+  $("themeBadge").textContent =
+  theme[0] +
+  " Tema: " +
+  theme[1];
+
+
+  $("grid").innerHTML =
+  "";
+
+
+  const firstDay =
+  new Date(
+    year,
+    month,
+    1
+  ).getDay();
+
+
+  const days =
+  new Date(
+    year,
+    month + 1,
+    0
+  ).getDate();
+
+
+  for(
+    let i = 0;
+    i < firstDay;
+    i++
+  ){
+
+    $("grid").insertAdjacentHTML(
+
+      "beforeend",
+
+      "<div class='day'></div>"
+
+    );
+
+  }
+
+
+  const now =
+  new Date();
+
+
+  for(
+    let d = 1;
+    d <= days;
+    d++
+  ){
+
+    const dateString =
+
+    `${year}-${String(month+1).padStart(2,"0")}-${String(d).padStart(2,"0")}`;
+
+
+    const isToday =
+
+    now.getFullYear() === year &&
+    now.getMonth() === month &&
+    now.getDate() === d;
+
+
+    const dayEvents =
+
+    events.filter(
+
+      event =>
+      event.event_date === dateString
+
+    );
+
+
+    let html =
+
+    `<div class="day${isToday ? " today" : ""}"
+          onclick="openEvent('${dateString}')">
+
+      <div class="num">
+        ${d}
+      </div>`;
+
+
+    for(
+      const event of dayEvents
+    ){
+
+      html +=
+
+      `<div
+        class="event"
+        onclick="event.stopPropagation();openEvent('${dateString}','${event.id}')">
+
+        <strong>
+
+          ${
+            event.event_time
+            ?
+            esc(
+              event.event_time.slice(0,5)
+            ) + " "
+            :
+            ""
+          }
+
+          ${esc(event.event_name)}
+
+        </strong>
+
+        ${esc(event.scheduled_by)}
+
+      </div>`;
+
+    }
+
+
+    html +=
+    "</div>";
+
+
+    $("grid")
+    .insertAdjacentHTML(
+      "beforeend",
+      html
+    );
+
+  }
+
+
+  await loadNotes();
+
+}
+
+
+/* =========================================
+   ACTUALIZAR
+   ========================================= */
+
+async function refresh(){
+
+  setStatus(
+    "☁️ Actualizando agenda…"
+  );
+
+
+  const connected =
+  await loadEvents();
+
+
+  if(connected){
+
+    await render();
+
+
+    setStatus(
+      "☁️ Agenda compartida y actualizada.",
+      "ok"
+    );
+
+  }
+
+}
+
+
+/* =========================================
+   CAMBIAR MES
+   ========================================= */
+
+function changeMonth(
+  amount
+){
+
+  month += amount;
+
+
+  if(month < 8){
+
+    month = 11;
+
+  }
+
+
+  if(month > 11){
+
+    month = 8;
+
+  }
+
+
+  refresh();
+
+}
+
+
+/* =========================================
+   BOTÓN HOY
+   ========================================= */
+
+function goToday(){
+
+  const now =
+  new Date();
+
+
+  if(
+
+    now.getFullYear() === 2026 &&
+    now.getMonth() >= 8 &&
+    now.getMonth() <= 11
+
+  ){
+
+    year = 2026;
+
+    month =
+    now.getMonth();
+
+  }else{
+
+    year = 2026;
+
+    month = 8;
+
+  }
+
+
+  refresh();
+
+}
+
+
+/* =========================================
+   ABRIR EVENTO
+   ========================================= */
+
+function openEvent(
+  date = null,
+  id = null
+){
+
+  editingId =
+  id
+  ?
+  String(id)
+  :
+  null;
+
+
+  const event =
+  id
+  ?
+  events.find(
+    item =>
+    String(item.id) ===
+    String(id)
+  )
+  :
+  null;
+
+
+  $("modalTitle").textContent =
+  event
+  ?
+  "Editar evento"
+  :
+  "Nuevo evento";
+
+
+  $("deleteBtn").style.display =
+  event
+  ?
+  "block"
+  :
+  "none";
+
+
+  $("date").value =
+
+  event
+  ?
+  event.event_date
+  :
+  (
+    date ||
+    `${year}-${String(month+1).padStart(2,"0")}-01`
+  );
+
+
+  $("time").value =
+
+  event?.event_time
+  ?
+  event.event_time.slice(0,5)
+  :
+  "";
+
+
+  $("name").value =
+  event?.event_name ||
+  "";
+
+
+  $("who").value =
+  event?.scheduled_by ||
+  "";
+
+
+  $("eventNotes").value =
+  event?.notes ||
+  "";
+
+
+  $("modal")
+  .classList
+  .add("show");
+
+
+  setTimeout(
+    () =>
+    $("name").focus(),
+    50
+  );
+
+}
+
+
+/* =========================================
+   CERRAR VENTANA
+   ========================================= */
+
+function closeModal(){
+
+  $("modal")
+  .classList
+  .remove("show");
+
+
+  editingId =
+  null;
+
+}
+
+
+/* =========================================
+   GUARDAR EVENTO
+   ========================================= */
+
+async function saveEvent(){
+
+  const date =
+  $("date").value;
+
+
+  const time =
+  $("time").value;
+
+
+  const name =
+  $("name")
+  .value
+  .trim();
+
+
+  const who =
+  $("who").value;
+
+
+  const notes =
+  $("eventNotes")
+  .value
+  .trim();
+
+
+  /* VALIDACIONES */
+
+  if(!validDate(date)){
+
+    setStatus(
+      "❌ Selecciona una fecha entre septiembre y diciembre de 2026.",
+      "err"
+    );
+
+    return;
+
+  }
+
+
+  if(!name){
+
+    setStatus(
+      "❌ Escribe el nombre del evento.",
+      "err"
+    );
+
+    $("name").focus();
+
+    return;
+
+  }
+
+
+  if(
+
+    ![
+      "Vania",
+      "Isabel",
+      "Alizee"
+    ].includes(who)
+
+  ){
+
+    setStatus(
+      "❌ Selecciona quién agenda.",
+      "err"
+    );
+
+    $("who").focus();
+
+    return;
+
+  }
+
+
+  const button =
+  $("saveBtn");
+
+
+  button.disabled =
+  true;
+
+
+  button.textContent =
+  "Guardando…";
+
+
+  setStatus(
+    "☁️ Guardando evento en la nube…"
+  );
+
+
+  try{
+
+    const payload = {
+
+      event_date:
+      date,
+
+      event_time:
+      time || null,
+
+      event_name:
+      name,
+
+      scheduled_by:
+      who,
+
+      notes:
+      notes,
+
+      updated_at:
+      new Date().toISOString()
+
+    };
+
+
+    /* EDITAR */
+
+    if(editingId){
+
+      await api(
+
+        `/events?id=eq.${encodeURIComponent(editingId)}`,
+
+        {
+
+          method:"PATCH",
+
+          headers:
+          headers({
+
+            "Prefer":
+            "return=minimal"
+
+          }),
+
+          body:
+          JSON.stringify(payload)
+
+        }
+
+      );
+
+    }
+
+
+    /* CREAR */
+
+    else{
+
+      await api(
+
+        "/events",
+
+        {
+
+          method:"POST",
+
+          headers:
+          headers({
+
+            "Prefer":
+            "return=minimal"
+
+          }),
+
+          body:
+          JSON.stringify(payload)
+
+        }
+
+      );
+
+    }
+
+
+    /* CERRAR */
+
+    closeModal();
+
+
+    /* IR AL MES DEL EVENTO */
+
+    year =
+    2026;
+
+
+    month =
+    new Date(
+      date + "T12:00:00"
+    ).getMonth();
+
+
+    /* RECARGAR DESDE LA NUBE */
+
+    await refresh();
+
+
+    setStatus(
+      "✅ Evento guardado y compartido para todos.",
+      "ok"
+    );
+
+
+  }catch(error){
+
+    console.error(
+      "ERROR GUARDANDO EVENTO:",
+      error
+    );
+
+
+    let message =
+    error.message ||
+    "Error desconocido";
+
+
+    if(error.code){
+
+      message +=
+      " [" +
+      error.code +
+      "]";
+
+    }
+
+
+    setStatus(
+      "❌ NO SE GUARDÓ: " +
+      message,
+      "err"
+    );
+
+
+  }finally{
+
+    button.disabled =
+    false;
+
+
+    button.textContent =
+    "Guardar";
+
+  }
+
+}
+
+
+/* =========================================
+   ELIMINAR EVENTO
+   ========================================= */
+
+async function deleteEvent(){
+
+  if(!editingId){
+
+    return;
+
+  }
+
+
+  if(
+
+    !confirm(
+      "¿Eliminar este evento?"
+    )
+
+  ){
+
+    return;
+
+  }
+
+
+  try{
+
+    setStatus(
+      "Eliminando evento…"
+    );
+
+
+    await api(
+
+      `/events?id=eq.${encodeURIComponent(editingId)}`,
+
+      {
+
+        method:"DELETE",
+
+        headers:
+        headers({
+
+          "Prefer":
+          "return=minimal"
+
+        })
+
+      }
+
+    );
+
+
+    closeModal();
+
+
+    await refresh();
+
+
+    setStatus(
+      "✅ Evento eliminado para todos.",
+      "ok"
+    );
+
+
+  }catch(error){
+
+    console.error(
+      error
+    );
+
+
+    setStatus(
+      "❌ NO SE PUDO ELIMINAR: " +
+      error.message,
+      "err"
+    );
+
+  }
+
+}
+
+
+/* =========================================
+   GUARDAR NOTAS
+   ========================================= */
+
+async function saveNotes(){
+
+  try{
+
+    await api(
+
+      "/monthly_notes",
+
+      {
+
+        method:"POST",
+
+        headers:
+        headers({
+
+          "Prefer":
+          "resolution=merge-duplicates,return=minimal"
+
+        }),
+
+        body:
+        JSON.stringify({
+
+          year:
+          year,
+
+          month:
+          month + 1,
+
+          notes:
+          $("notes").value
+
+        })
+
+      }
+
+    );
+
+
+    setStatus(
+      "📝 Notas guardadas y compartidas.",
+      "ok"
+    );
+
+
+  }catch(error){
+
+    console.error(
+      error
+    );
+
+
+    setStatus(
+      "❌ No se pudieron guardar las notas: " +
+      error.message,
+      "err"
+    );
+
+  }
+
+}
+
+
+/* =========================================
+   GUARDAR NOTAS AUTOMÁTICAMENTE
+   ========================================= */
+
+$("notes")
+.addEventListener(
+  "input",
+  function(){
+
+    clearTimeout(
+      notesTimer
+    );
+
+
+    notesTimer =
+    setTimeout(
+      saveNotes,
+      700
+    );
+
+  }
 );
 
-console.error(error);
 
-return;
+/* =========================================
+   CERRAR MODAL AL TOCAR FUERA
+   ========================================= */
 
-}
+$("modal")
+.addEventListener(
+  "click",
+  function(event){
 
-closeModal();
+    if(
+      event.target ===
+      $("modal")
+    ){
 
-editing=null;
+      closeModal();
 
-await refresh();
+    }
 
-}
+  }
+);
+
+
+/* =========================================
+   SI REGRESA INTERNET
+   ========================================= */
 
 window.addEventListener(
-"online",
-refresh
+  "online",
+  refresh
 );
+
+
+/* =========================================
+   INICIAR AGENDA
+   ========================================= */
 
 refresh();
 
