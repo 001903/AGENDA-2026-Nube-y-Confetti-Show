@@ -1,32 +1,137 @@
-<label>Hora de inicio</label>
-<input type="time" id="start_time">
+-- =========================================================
+-- AGENDA 2026 - ACTUALIZACIÓN COMPLETA
+-- =========================================================
+-- Este código:
+-- 1. Conserva los eventos existentes.
+-- 2. Agrega los nuevos campos.
+-- 3. Permite horas de inicio y fin.
+-- 4. Agrega tipos de evento.
+-- 5. Agrega estados de pago.
+-- 6. Agrega monto pendiente.
+-- 7. Agrega métodos de pago.
+-- =========================================================
 
-<label>Hora de fin</label>
-<input type="time" id="end_time">
 
-<label>Tipo de evento</label>
-<select id="event_type">
-  <option value="">Seleccionar</option>
-  <option value="Baby shower">Baby shower</option>
-  <option value="Revelación de sexo">Revelación de sexo</option>
-  <option value="Despedida de soltera">Despedida de soltera</option>
-</select>
+-- =========================================================
+-- 1. AGREGAR NUEVAS COLUMNAS
+-- =========================================================
 
-<label>Estado de pago</label>
-<select id="payment_status">
-  <option value="">Seleccionar</option>
-  <option value="Pagado">Pagado</option>
-  <option value="Pendiente">Pendiente</option>
-  <option value="Liquidado">Liquidado</option>
-</select>
+ALTER TABLE public.events
+ADD COLUMN IF NOT EXISTS start_time TEXT;
 
-<label>Monto pendiente</label>
-<input type="number" id="pending_amount" min="0" step="0.01">
+ALTER TABLE public.events
+ADD COLUMN IF NOT EXISTS end_time TEXT;
 
-<label>Método de pago</label>
-<select id="payment_method">
-  <option value="">Seleccionar</option>
-  <option value="Efectivo">Efectivo</option>
-  <option value="Transferencia">Transferencia</option>
-  <option value="Anticipo">Anticipo</option>
-</select>
+ALTER TABLE public.events
+ADD COLUMN IF NOT EXISTS event_type TEXT;
+
+ALTER TABLE public.events
+ADD COLUMN IF NOT EXISTS payment_status TEXT;
+
+ALTER TABLE public.events
+ADD COLUMN IF NOT EXISTS pending_amount NUMERIC(10,2);
+
+ALTER TABLE public.events
+ADD COLUMN IF NOT EXISTS payment_method TEXT;
+
+
+-- =========================================================
+-- 2. ELIMINAR RESTRICCIONES ANTERIORES
+--    PARA PODER VOLVER A CREARLAS CORRECTAMENTE
+-- =========================================================
+
+ALTER TABLE public.events
+DROP CONSTRAINT IF EXISTS events_event_type_check;
+
+ALTER TABLE public.events
+DROP CONSTRAINT IF EXISTS events_payment_status_check;
+
+ALTER TABLE public.events
+DROP CONSTRAINT IF EXISTS events_payment_method_check;
+
+ALTER TABLE public.events
+DROP CONSTRAINT IF EXISTS events_pending_amount_check;
+
+
+-- =========================================================
+-- 3. TIPOS DE EVENTO
+-- =========================================================
+
+ALTER TABLE public.events
+ADD CONSTRAINT events_event_type_check
+CHECK (
+    event_type IS NULL
+    OR event_type IN (
+        'Baby shower',
+        'Revelación de sexo',
+        'Despedida de soltera'
+    )
+);
+
+
+-- =========================================================
+-- 4. ESTADOS DE PAGO
+-- =========================================================
+
+ALTER TABLE public.events
+ADD CONSTRAINT events_payment_status_check
+CHECK (
+    payment_status IS NULL
+    OR payment_status IN (
+        'Pagado',
+        'Pendiente',
+        'Liquidado'
+    )
+);
+
+
+-- =========================================================
+-- 5. MÉTODOS DE PAGO
+-- =========================================================
+
+ALTER TABLE public.events
+ADD CONSTRAINT events_payment_method_check
+CHECK (
+    payment_method IS NULL
+    OR payment_method IN (
+        'Efectivo',
+        'Transferencia',
+        'Anticipo'
+    )
+);
+
+
+-- =========================================================
+-- 6. MONTO PENDIENTE
+-- =========================================================
+
+ALTER TABLE public.events
+ADD CONSTRAINT events_pending_amount_check
+CHECK (
+    pending_amount IS NULL
+    OR pending_amount >= 0
+);
+
+
+-- =========================================================
+-- 7. OPCIONAL: VALORES POR DEFECTO
+-- =========================================================
+-- No modificamos eventos antiguos.
+-- Los nuevos registros pueden utilizar estos valores.
+
+ALTER TABLE public.events
+ALTER COLUMN payment_status SET DEFAULT 'Pendiente';
+
+
+-- =========================================================
+-- 8. VERIFICAR QUE LAS COLUMNAS EXISTAN
+-- =========================================================
+
+SELECT
+    column_name,
+    data_type,
+    column_default
+FROM information_schema.columns
+WHERE table_schema = 'public'
+  AND table_name = 'events'
+ORDER BY ordinal_position;
