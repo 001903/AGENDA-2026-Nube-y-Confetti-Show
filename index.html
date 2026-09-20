@@ -1,137 +1,2163 @@
--- =========================================================
--- AGENDA 2026 - ACTUALIZACIÓN COMPLETA
--- =========================================================
--- Este código:
--- 1. Conserva los eventos existentes.
--- 2. Agrega los nuevos campos.
--- 3. Permite horas de inicio y fin.
--- 4. Agrega tipos de evento.
--- 5. Agrega estados de pago.
--- 6. Agrega monto pendiente.
--- 7. Agrega métodos de pago.
--- =========================================================
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mi Agenda 2026</title>
+
+<style>
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  font-family:system-ui,-apple-system,Segoe UI,sans-serif;
+  background:#f7f3ef;
+  color:#342b26;
+}
+
+.app{
+  max-width:1100px;
+  margin:auto;
+  min-height:100vh;
+}
+
+.top{
+  padding:22px 20px 10px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:15px;
+}
+
+.brand{
+  font-size:25px;
+  font-weight:800;
+}
+
+.sub{
+  color:#806f65;
+  font-size:13px;
+}
+
+button,select,input,textarea{
+  font:inherit;
+}
+
+.nav{
+  display:flex;
+  gap:8px;
+  align-items:center;
+}
+
+.nav button{
+  border:0;
+  background:white;
+  border-radius:12px;
+  padding:9px 13px;
+  cursor:pointer;
+  box-shadow:0 2px 10px #00000010;
+}
+
+.nav .add{
+  background:#5b765f;
+  color:#fff;
+  font-weight:700;
+}
+
+.month{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:18px;
+  margin:8px 20px 18px;
+}
+
+.month h1{
+  margin:0;
+  font-size:30px;
+}
+
+.arrow{
+  border:0;
+  background:white;
+  width:38px;
+  height:38px;
+  border-radius:50%;
+  cursor:pointer;
+  box-shadow:0 2px 10px #00000010;
+}
+
+.calendar{
+  margin:0 20px;
+  background:white;
+  border-radius:20px;
+  overflow:hidden;
+  box-shadow:0 5px 25px #0000000d;
+}
+
+.week{
+  display:grid;
+  grid-template-columns:repeat(7,1fr);
+  background:#eadfd5;
+}
+
+.week div{
+  text-align:center;
+  padding:10px;
+  font-size:12px;
+  font-weight:800;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(7,1fr);
+}
+
+.day{
+  min-height:115px;
+  border-right:1px solid #eee4dc;
+  border-top:1px solid #eee4dc;
+  padding:8px;
+  cursor:pointer;
+  position:relative;
+}
+
+.day:hover{
+  background:#faf7f4;
+}
+
+.num{
+  font-weight:800;
+  font-size:13px;
+}
+
+.today{
+  outline:2px solid #5b765f;
+  outline-offset:-2px;
+}
+
+.event{
+  margin-top:6px;
+  border-radius:8px;
+  padding:5px 6px;
+  background:#e8efe8;
+  font-size:11px;
+  overflow:hidden;
+  white-space:nowrap;
+  text-overflow:ellipsis;
+}
+
+.event strong{
+  display:block;
+}
+
+.event-meta{
+  font-size:9px;
+  opacity:.8;
+  margin-top:2px;
+}
+
+.badge{
+  display:inline-block;
+  margin-top:3px;
+  padding:2px 5px;
+  border-radius:5px;
+  background:#f2e7dc;
+  font-size:9px;
+}
+
+.badge.pending{
+  font-weight:700;
+  background:#f4e0c9;
+}
+
+.badge.paid{
+  background:#dfeee0;
+}
+
+.panel{
+  margin:20px;
+  background:white;
+  border-radius:18px;
+  padding:18px;
+  box-shadow:0 5px 25px #0000000d;
+}
+
+.panel h2{
+  margin:0 0 12px;
+  font-size:18px;
+}
+
+.notes{
+  width:100%;
+  min-height:80px;
+  border:1px solid #ddd1c8;
+  border-radius:12px;
+  padding:10px;
+  resize:vertical;
+}
+
+.status{
+  text-align:center;
+  font-size:12px;
+  color:#806f65;
+  padding:0 20px 10px;
+}
+
+.status.ok{
+  color:#52745a;
+}
+
+.status.err{
+  color:#9b3f3f;
+}
+
+.modal{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:#0007;
+  align-items:center;
+  justify-content:center;
+  padding:15px;
+  z-index:50;
+}
+
+.modal.show{
+  display:flex;
+}
+
+.box{
+  background:#fff;
+  border-radius:20px;
+  width:min(560px,100%);
+  padding:22px;
+  max-height:92vh;
+  overflow:auto;
+}
+
+.box h2{
+  margin-top:0;
+}
+
+.field{
+  margin:12px 0;
+}
+
+.field label{
+  display:block;
+  font-size:12px;
+  font-weight:700;
+  margin-bottom:5px;
+}
+
+.field input,
+.field select,
+.field textarea{
+  width:100%;
+  border:1px solid #d8ccc3;
+  border-radius:10px;
+  padding:9px;
+  background:white;
+}
+
+.field-row{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+
+.help{
+  font-size:11px;
+  color:#806f65;
+  margin-top:4px;
+}
+
+.actions{
+  display:flex;
+  justify-content:flex-end;
+  gap:8px;
+  margin-top:16px;
+}
+
+.actions button{
+  border:0;
+  border-radius:10px;
+  padding:9px 14px;
+  cursor:pointer;
+}
+
+.save{
+  background:#5b765f;
+  color:white;
+  font-weight:700;
+}
+
+.delete{
+  background:#f4dddd;
+  color:#8b3333;
+}
+
+@media(max-width:700px){
+
+  .top{
+    align-items:flex-start;
+  }
+
+  .brand{
+    font-size:20px;
+  }
+
+  .month h1{
+    font-size:23px;
+  }
+
+  .day{
+    min-height:85px;
+    padding:5px;
+  }
+
+  .event{
+    font-size:9px;
+  }
+
+  .week div{
+    padding:7px 2px;
+    font-size:10px;
+  }
+
+  body{
+    background:#f3eee9;
+  }
+
+  .app{
+    padding-bottom:90px;
+  }
+
+  .top{
+    position:sticky;
+    top:0;
+    z-index:5;
+    background:#f3eee9;
+    padding:14px 14px 8px;
+  }
+
+  .sub{
+    font-size:11px;
+  }
+
+  .nav{
+    gap:5px;
+  }
+
+  .nav button{
+    padding:10px 11px;
+    border-radius:12px;
+  }
+
+  .nav .add{
+    font-size:0;
+    width:44px;
+    height:44px;
+  }
+
+  .nav .add:after{
+    content:"＋";
+    font-size:23px;
+  }
+
+  .month{
+    margin:8px 12px 14px;
+    gap:12px;
+  }
+
+  .month h1{
+    font-size:25px;
+  }
+
+  .arrow{
+    width:44px;
+    height:44px;
+    font-size:20px;
+  }
+
+  .calendar{
+    margin:0 10px;
+    border-radius:16px;
+  }
+
+  .week div{
+    padding:9px 1px;
+    font-size:10px;
+  }
+
+  .day{
+    min-height:92px;
+    padding:7px 5px;
+  }
+
+  .num{
+    font-size:13px;
+  }
+
+  .event{
+    margin-top:4px;
+    padding:5px;
+    font-size:9px;
+    border-radius:7px;
+  }
+
+  .event strong{
+    font-size:9px;
+  }
+
+  .panel{
+    margin:14px 10px;
+    border-radius:16px;
+    padding:15px;
+  }
+
+  .notes{
+    min-height:100px;
+    font-size:14px;
+  }
+
+  .modal{
+    padding:10px;
+    align-items:flex-end;
+  }
+
+  .box{
+    border-radius:22px 22px 0 0;
+    padding:20px 17px;
+    width:100%;
+    max-height:92vh;
+    overflow:auto;
+  }
+
+  .box h2{
+    font-size:20px;
+  }
+
+  .field{
+    margin:13px 0;
+  }
+
+  .field label{
+    font-size:13px;
+  }
+
+  .field input,
+  .field select,
+  .field textarea{
+    font-size:16px;
+    padding:12px;
+  }
+
+  .field-row{
+    grid-template-columns:1fr;
+  }
+
+  .actions{
+    position:sticky;
+    bottom:0;
+    background:white;
+    padding-top:10px;
+  }
+
+  .actions button{
+    padding:12px 15px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+  <!-- ENCABEZADO -->
+  <div class="top">
+
+    <div>
+      <div class="brand">📅 Mi Agenda</div>
+
+      <div class="sub">
+        Septiembre · Octubre · Noviembre · Diciembre 2026
+      </div>
+    </div>
+
+    <div class="nav">
+
+      <button onclick="go(-1)">
+        ‹
+      </button>
+
+      <button onclick="today()">
+        Hoy
+      </button>
+
+      <button onclick="go(1)">
+        ›
+      </button>
+
+      <button
+        class="add"
+        onclick="openEvent()"
+      >
+        ＋ Evento
+      </button>
+
+    </div>
+
+  </div>
 
 
--- =========================================================
--- 1. AGREGAR NUEVAS COLUMNAS
--- =========================================================
+  <!-- MES -->
 
-ALTER TABLE public.events
-ADD COLUMN IF NOT EXISTS start_time TEXT;
+  <div class="month">
 
-ALTER TABLE public.events
-ADD COLUMN IF NOT EXISTS end_time TEXT;
+    <button
+      class="arrow"
+      onclick="go(-1)"
+    >
+      ‹
+    </button>
 
-ALTER TABLE public.events
-ADD COLUMN IF NOT EXISTS event_type TEXT;
+    <h1 id="monthTitle"></h1>
 
-ALTER TABLE public.events
-ADD COLUMN IF NOT EXISTS payment_status TEXT;
+    <button
+      class="arrow"
+      onclick="go(1)"
+    >
+      ›
+    </button>
 
-ALTER TABLE public.events
-ADD COLUMN IF NOT EXISTS pending_amount NUMERIC(10,2);
-
-ALTER TABLE public.events
-ADD COLUMN IF NOT EXISTS payment_method TEXT;
-
-
--- =========================================================
--- 2. ELIMINAR RESTRICCIONES ANTERIORES
---    PARA PODER VOLVER A CREARLAS CORRECTAMENTE
--- =========================================================
-
-ALTER TABLE public.events
-DROP CONSTRAINT IF EXISTS events_event_type_check;
-
-ALTER TABLE public.events
-DROP CONSTRAINT IF EXISTS events_payment_status_check;
-
-ALTER TABLE public.events
-DROP CONSTRAINT IF EXISTS events_payment_method_check;
-
-ALTER TABLE public.events
-DROP CONSTRAINT IF EXISTS events_pending_amount_check;
+  </div>
 
 
--- =========================================================
--- 3. TIPOS DE EVENTO
--- =========================================================
+  <!-- CALENDARIO -->
 
-ALTER TABLE public.events
-ADD CONSTRAINT events_event_type_check
-CHECK (
-    event_type IS NULL
-    OR event_type IN (
-        'Baby shower',
-        'Revelación de sexo',
-        'Despedida de soltera'
+  <div class="calendar">
+
+    <div
+      class="week"
+      id="week"
+    ></div>
+
+    <div
+      class="grid"
+      id="grid"
+    ></div>
+
+  </div>
+
+
+  <div
+    style="
+      text-align:center;
+      padding:10px;
+      color:#806f65;
+      font-size:12px
+    "
+  >
+    Toca cualquier día para agregar o editar un evento
+  </div>
+
+
+  <div
+    class="status"
+    id="status"
+  >
+    Conectando con la agenda compartida…
+  </div>
+
+
+  <!-- NOTAS -->
+
+  <div class="panel">
+
+    <h2>
+      📝 Notas del mes
+    </h2>
+
+    <textarea
+      id="notes"
+      class="notes"
+      placeholder="Escribe aquí tus notas, pendientes o recordatorios..."
+    ></textarea>
+
+  </div>
+
+</div>
+
+
+<!-- =====================================================
+     MODAL DEL EVENTO
+===================================================== -->
+
+<div
+  class="modal"
+  id="modal"
+>
+
+  <div class="box">
+
+    <h2 id="modalTitle">
+      Nuevo evento
+    </h2>
+
+
+    <!-- FECHA -->
+
+    <div class="field">
+
+      <label>
+        Fecha
+      </label>
+
+      <input
+        id="date"
+        type="date"
+      >
+
+    </div>
+
+
+    <!-- HORAS -->
+
+    <div class="field-row">
+
+      <div class="field">
+
+        <label>
+          Hora de inicio
+        </label>
+
+        <input
+          id="startTime"
+          type="time"
+        >
+
+      </div>
+
+
+      <div class="field">
+
+        <label>
+          Hora de finalización
+        </label>
+
+        <input
+          id="endTime"
+          type="time"
+        >
+
+      </div>
+
+    </div>
+
+
+    <!-- NOMBRE -->
+
+    <div class="field">
+
+      <label>
+        Nombre del evento
+      </label>
+
+      <input
+        id="name"
+        placeholder="Ej. Baby shower, reunión, cita..."
+      >
+
+    </div>
+
+
+    <!-- TIPO DE EVENTO -->
+
+    <div class="field">
+
+      <label>
+        Tipo de evento
+      </label>
+
+      <select id="eventType">
+
+        <option value="">
+          Selecciona tipo de evento
+        </option>
+
+        <option value="Baby shower">
+          Baby shower
+        </option>
+
+        <option value="Revelación de sexo">
+          Revelación de sexo
+        </option>
+
+        <option value="Despedida de soltera">
+          Despedida de soltera
+        </option>
+
+      </select>
+
+    </div>
+
+
+    <!-- QUIÉN AGENDA -->
+
+    <div class="field">
+
+      <label>
+        Quién agenda
+      </label>
+
+      <select id="who">
+
+        <option value="">
+          Selecciona quién agenda
+        </option>
+
+        <option value="Vania">
+          Vania
+        </option>
+
+        <option value="Isabel">
+          Isabel
+        </option>
+
+        <option value="Alizee">
+          Alizee
+        </option>
+
+      </select>
+
+    </div>
+
+
+    <!-- ESTADO DE PAGO -->
+
+    <div class="field">
+
+      <label>
+        Estado de pago
+      </label>
+
+      <select
+        id="paymentStatus"
+        onchange="togglePendingAmount()"
+      >
+
+        <option value="">
+          Sin especificar
+        </option>
+
+        <option value="Pagado">
+          Pagado
+        </option>
+
+        <option value="Pendiente">
+          Pendiente
+        </option>
+
+        <option value="Liquidado">
+          Liquidado
+        </option>
+
+      </select>
+
+    </div>
+
+
+    <!-- MONTO PENDIENTE -->
+
+    <div
+      class="field"
+      id="pendingWrap"
+      style="display:none"
+    >
+
+      <label>
+        ¿Cuánto queda pendiente?
+      </label>
+
+      <input
+        id="pendingAmount"
+        type="number"
+        min="0"
+        step="0.01"
+        inputmode="decimal"
+        placeholder="Ej. 1500"
+      >
+
+      <div class="help">
+        Este campo aparece solamente cuando el estado es "Pendiente".
+      </div>
+
+    </div>
+
+
+    <!-- MÉTODO DE PAGO -->
+
+    <div class="field">
+
+      <label>
+        Método de pago
+      </label>
+
+      <select id="paymentMethod">
+
+        <option value="">
+          Selecciona método de pago
+        </option>
+
+        <option value="Efectivo">
+          Efectivo
+        </option>
+
+        <option value="Transferencia">
+          Transferencia
+        </option>
+
+        <option value="Anticipo">
+          Anticipo
+        </option>
+
+      </select>
+
+    </div>
+
+
+    <!-- NOTAS -->
+
+    <div class="field">
+
+      <label>
+        Notas
+      </label>
+
+      <textarea
+        id="eventNotes"
+        rows="3"
+        placeholder="Detalles del evento..."
+      ></textarea>
+
+    </div>
+
+
+    <!-- BOTONES -->
+
+    <div class="actions">
+
+      <button
+        type="button"
+        class="delete"
+        id="del"
+        onclick="removeEvent()"
+      >
+        Eliminar
+      </button>
+
+      <button
+        type="button"
+        onclick="closeModal()"
+      >
+        Cancelar
+      </button>
+
+      <button
+        type="button"
+        class="save"
+        id="saveBtn"
+        onclick="saveEvent()"
+      >
+        Guardar
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<script>
+
+/* =========================================================
+   SUPABASE
+========================================================= */
+
+const SUPABASE_URL =
+  "https://emvzdewojqepmuhnmxqv.supabase.co";
+
+const SUPABASE_KEY =
+  "sb_publishable_1gAnnpuYenWJOuZOQ9pjIQ_Fn-A-sAG";
+
+const API =
+  SUPABASE_URL + "/rest/v1";
+
+
+/* =========================================================
+   CONFIGURACIÓN
+========================================================= */
+
+const months = [
+  "Septiembre",
+  "Octubre",
+  "Noviembre",
+  "Diciembre"
+];
+
+const names = [
+  "Dom",
+  "Lun",
+  "Mar",
+  "Mié",
+  "Jue",
+  "Vie",
+  "Sáb"
+];
+
+let month = 8;
+let year = 2026;
+let editing = null;
+let cacheEvents = [];
+
+
+/* =========================================================
+   ELEMENTOS
+========================================================= */
+
+const $ = id =>
+  document.getElementById(id);
+
+const statusEl =
+  $("status");
+
+const notesEl =
+  $("notes");
+
+const modalEl =
+  $("modal");
+
+const modalTitleEl =
+  $("modalTitle");
+
+const dateEl =
+  $("date");
+
+const startTimeEl =
+  $("startTime");
+
+const endTimeEl =
+  $("endTime");
+
+const nameEl =
+  $("name");
+
+const eventTypeEl =
+  $("eventType");
+
+const whoEl =
+  $("who");
+
+const paymentStatusEl =
+  $("paymentStatus");
+
+const pendingAmountEl =
+  $("pendingAmount");
+
+const pendingWrapEl =
+  $("pendingWrap");
+
+const paymentMethodEl =
+  $("paymentMethod");
+
+const eventNotesEl =
+  $("eventNotes");
+
+const saveBtnEl =
+  $("saveBtn");
+
+const delBtnEl =
+  $("del");
+
+const monthTitleEl =
+  $("monthTitle");
+
+const weekEl =
+  $("week");
+
+const gridEl =
+  $("grid");
+
+
+/* =========================================================
+   ESTADO
+========================================================= */
+
+function setStatus(
+  text,
+  ok = false,
+  err = false
+){
+
+  statusEl.textContent =
+    text;
+
+  statusEl.className =
+    "status" +
+    (ok ? " ok" : "") +
+    (err ? " err" : "");
+}
+
+
+/* =========================================================
+   ESCAPAR TEXTO
+========================================================= */
+
+function esc(value){
+
+  return String(value ?? "")
+    .replace(
+      /[&<>"']/g,
+      character => ({
+        "&":"&amp;",
+        "<":"&lt;",
+        ">":"&gt;",
+        '"':"&quot;",
+        "'":"&#039;"
+      })[character]
+    );
+
+}
+
+
+/* =========================================================
+   FORMATO DE DINERO
+========================================================= */
+
+function money(value){
+
+  if(
+    value === null ||
+    value === undefined ||
+    value === ""
+  ){
+    return "";
+  }
+
+  return Number(value)
+    .toLocaleString(
+      "es-MX",
+      {
+        minimumFractionDigits:2,
+        maximumFractionDigits:2
+      }
+    );
+}
+
+
+/* =========================================================
+   PETICIONES A SUPABASE
+========================================================= */
+
+async function api(
+  path,
+  options = {}
+){
+
+  const headers = {
+
+    apikey:
+      SUPABASE_KEY,
+
+    Authorization:
+      "Bearer " + SUPABASE_KEY,
+
+    "Content-Type":
+      "application/json",
+
+    ...(options.headers || {})
+
+  };
+
+
+  const response =
+    await fetch(
+      API + path,
+      {
+        ...options,
+        headers
+      }
+    );
+
+
+  const text =
+    await response.text();
+
+
+  let data = null;
+
+
+  try{
+
+    data =
+      text
+        ? JSON.parse(text)
+        : null;
+
+  }catch{
+
+    data = text;
+
+  }
+
+
+  if(!response.ok){
+
+    throw new Error(
+
+      data?.message ||
+      data?.hint ||
+      data?.details ||
+      data?.error ||
+      text ||
+      ("HTTP " + response.status)
+
+    );
+
+  }
+
+
+  return data;
+
+}
+
+
+/* =========================================================
+   CARGAR EVENTOS
+========================================================= */
+
+async function loadEvents(){
+
+  try{
+
+    cacheEvents =
+      await api(
+        "/events?select=*&order=event_date.asc,start_time.asc,event_time.asc"
+      ) || [];
+
+    return true;
+
+  }catch(error){
+
+    console.error(error);
+
+    setStatus(
+      "No se pudo conectar con la agenda compartida: " +
+      error.message,
+      false,
+      true
+    );
+
+    return false;
+
+  }
+
+}
+
+
+/* =========================================================
+   CARGAR NOTAS
+========================================================= */
+
+async function loadNotes(){
+
+  try{
+
+    const data =
+      await api(
+        `/monthly_notes?select=notes&year=eq.${year}&month=eq.${month+1}&limit=1`
+      );
+
+    notesEl.value =
+      data?.[0]?.notes || "";
+
+  }catch(error){
+
+    console.error(
+      "Error cargando notas:",
+      error
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   GUARDAR NOTAS AUTOMÁTICAMENTE
+========================================================= */
+
+let notesTimer = null;
+
+notesEl.addEventListener(
+  "input",
+  () => {
+
+    clearTimeout(
+      notesTimer
+    );
+
+    notesTimer =
+      setTimeout(
+        saveNotes,
+        700
+      );
+
+  }
+);
+
+
+async function saveNotes(){
+
+  try{
+
+    await api(
+      "/monthly_notes",
+      {
+        method:"POST",
+
+        headers:{
+          Prefer:
+            "resolution=merge-duplicates,return=minimal"
+        },
+
+        body:
+          JSON.stringify({
+            year:year,
+            month:month+1,
+            notes:notesEl.value,
+            updated_at:
+              new Date().toISOString()
+          })
+
+      }
+    );
+
+
+    setStatus(
+      "Notas guardadas en la agenda compartida.",
+      true
+    );
+
+  }catch(error){
+
+    console.error(error);
+
+    setStatus(
+      "ERROR AL GUARDAR NOTAS: " +
+      error.message,
+      false,
+      true
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   RENDERIZAR CALENDARIO
+========================================================= */
+
+async function render(){
+
+  monthTitleEl.textContent =
+    months[month-8] +
+    " " +
+    year;
+
+
+  weekEl.innerHTML =
+    names
+      .map(
+        name =>
+          `<div>${name}</div>`
+      )
+      .join("");
+
+
+  gridEl.innerHTML =
+    "";
+
+
+  const first =
+    new Date(
+      year,
+      month,
+      1
+    ).getDay();
+
+
+  const days =
+    new Date(
+      year,
+      month + 1,
+      0
+    ).getDate();
+
+
+  for(
+    let i = 0;
+    i < first;
+    i++
+  ){
+
+    gridEl.innerHTML +=
+      "<div class='day'></div>";
+
+  }
+
+
+  const now =
+    new Date();
+
+
+  for(
+    let d = 1;
+    d <= days;
+    d++
+  ){
+
+    const ds =
+      `${year}-${String(month+1).padStart(2,"0")}-${String(d).padStart(2,"0")}`;
+
+
+    const cls =
+
+      (
+        now.getFullYear() === year &&
+        now.getMonth() === month &&
+        now.getDate() === d
+      )
+
+      ? "day today"
+
+      : "day";
+
+
+    const eventsForDay =
+
+      cacheEvents
+        .filter(
+          event =>
+            event.event_date === ds
+        )
+        .sort(
+          (a,b) =>
+            (
+              a.start_time ||
+              a.event_time ||
+              ""
+            ).localeCompare(
+              b.start_time ||
+              b.event_time ||
+              ""
+            )
+        );
+
+
+    const eventHtml =
+
+      eventsForDay
+        .map(event => {
+
+          const start =
+            event.start_time ||
+            event.event_time ||
+            "";
+
+
+          const end =
+            event.end_time ||
+            "";
+
+
+          const schedule =
+            start
+
+              ? start.slice(0,5) +
+                (
+                  end
+                    ? "–" +
+                      end.slice(0,5)
+                    : ""
+                )
+
+              : "";
+
+
+          const type =
+            event.event_type ||
+            "";
+
+
+          const payment =
+            event.payment_status ||
+            "";
+
+
+          const pending =
+
+            payment === "Pendiente" &&
+
+            event.pending_amount !== null &&
+            event.pending_amount !== undefined &&
+            event.pending_amount !== ""
+
+              ?
+
+                ` · $${money(
+                  event.pending_amount
+                )}`
+
+              : "";
+
+
+          const paymentClass =
+
+            payment === "Pendiente"
+
+              ? "pending"
+
+              :
+
+                (
+                  payment === "Pagado" ||
+                  payment === "Liquidado"
+                )
+
+                  ? "paid"
+
+                  : "";
+
+
+          return `
+
+            <div
+              class="event"
+              onclick="
+                event.stopPropagation();
+                openEvent(
+                  '${ds}',
+                  '${event.id}'
+                )
+              "
+            >
+
+              <strong>
+
+                ${esc(schedule)}
+                ${esc(event.event_name)}
+
+              </strong>
+
+
+              <span>
+
+                ${esc(
+                  event.scheduled_by || ""
+                )}
+
+              </span>
+
+
+              ${
+                type
+
+                  ?
+
+                    `
+                    <div class="event-meta">
+                      ${esc(type)}
+                    </div>
+                    `
+
+                  : ""
+              }
+
+
+              ${
+                payment
+
+                  ?
+
+                    `
+                    <div
+                      class="badge ${paymentClass}"
+                    >
+                      ${esc(payment)}
+                      ${esc(pending)}
+                    </div>
+                    `
+
+                  : ""
+              }
+
+            </div>
+
+          `;
+
+        })
+        .join("");
+
+
+    gridEl.innerHTML += `
+
+      <div
+        class="${cls}"
+        onclick="
+          openEvent('${ds}')
+        "
+      >
+
+        <div class="num">
+          ${d}
+        </div>
+
+        ${eventHtml}
+
+      </div>
+
+    `;
+
+  }
+
+
+  await loadNotes();
+
+}
+
+
+/* =========================================================
+   REFRESCAR AGENDA
+========================================================= */
+
+async function refresh(){
+
+  setStatus(
+    "Actualizando agenda…"
+  );
+
+
+  const ok =
+    await loadEvents();
+
+
+  if(ok){
+
+    await render();
+
+
+    setStatus(
+      "Agenda compartida y actualizada.",
+      true
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   NAVEGACIÓN
+========================================================= */
+
+function go(direction){
+
+  month += direction;
+
+
+  if(month < 8){
+
+    month = 11;
+    year = 2026;
+
+  }
+
+
+  if(month > 11){
+
+    month = 8;
+    year = 2026;
+
+  }
+
+
+  refresh();
+
+}
+
+
+function today(){
+
+  year = 2026;
+  month = 8;
+
+  refresh();
+
+}
+
+
+/* =========================================================
+   MOSTRAR / OCULTAR MONTO PENDIENTE
+========================================================= */
+
+function togglePendingAmount(){
+
+  const show =
+    paymentStatusEl.value === "Pendiente";
+
+
+  pendingWrapEl.style.display =
+    show
+      ? "block"
+      : "none";
+
+
+  if(!show){
+
+    pendingAmountEl.value =
+      "";
+
+  }
+
+}
+
+
+/* =========================================================
+   ABRIR EVENTO
+========================================================= */
+
+function openEvent(
+  ds = null,
+  id = null
+){
+
+  editing = id;
+
+
+  const event =
+
+    id
+
+      ? cacheEvents.find(
+          item =>
+            String(item.id) ===
+            String(id)
+        )
+
+      : null;
+
+
+  modalTitleEl.textContent =
+
+    event
+      ? "Editar evento"
+      : "Nuevo evento";
+
+
+  delBtn.style.display =
+    event
+      ? "block"
+      : "none";
+
+
+  dateEl.value =
+
+    event
+
+      ? event.event_date
+
+      :
+
+        (
+          ds ||
+          `${year}-${String(month+1).padStart(2,"0")}-01`
+        );
+
+
+  startTimeEl.value =
+
+    event?.start_time
+
+      ? event.start_time.slice(0,5)
+
+      :
+
+        (
+          event?.event_time
+            ? event.event_time.slice(0,5)
+            : ""
+        );
+
+
+  endTimeEl.value =
+
+    event?.end_time
+      ? event.end_time.slice(0,5)
+      : "";
+
+
+  nameEl.value =
+    event?.event_name ||
+    "";
+
+
+  eventTypeEl.value =
+    event?.event_type ||
+    "";
+
+
+  whoEl.value =
+    event?.scheduled_by ||
+    "";
+
+
+  paymentStatusEl.value =
+    event?.payment_status ||
+    "";
+
+
+  pendingAmountEl.value =
+    event?.pending_amount ??
+    "";
+
+
+  paymentMethodEl.value =
+    event?.payment_method ||
+    "";
+
+
+  eventNotesEl.value =
+    event?.notes ||
+    "";
+
+
+  togglePendingAmount();
+
+
+  modalEl.classList.add(
+    "show"
+  );
+
+}
+
+
+/* =========================================================
+   CERRAR MODAL
+========================================================= */
+
+function closeModal(){
+
+  modalEl.classList.remove(
+    "show"
+  );
+
+}
+
+
+/* =========================================================
+   GUARDAR EVENTO
+========================================================= */
+
+async function saveEvent(){
+
+  try{
+
+    const eventDate =
+      dateEl.value;
+
+    const eventStart =
+      startTimeEl.value;
+
+    const eventEnd =
+      endTimeEl.value;
+
+    const eventName =
+      nameEl.value.trim();
+
+    const eventType =
+      eventTypeEl.value;
+
+    const eventWho =
+      whoEl.value;
+
+    const paymentStatus =
+      paymentStatusEl.value;
+
+    const pendingRaw =
+      pendingAmountEl.value;
+
+    const paymentMethod =
+      paymentMethodEl.value;
+
+    const eventExtra =
+      eventNotesEl.value.trim();
+
+
+    /* =========================
+       VALIDACIONES
+    ========================= */
+
+    if(!eventDate){
+
+      setStatus(
+        "Falta seleccionar la fecha.",
+        false,
+        true
+      );
+
+      return;
+
+    }
+
+
+    if(!eventName){
+
+      setStatus(
+        "Falta escribir el nombre del evento.",
+        false,
+        true
+      );
+
+      nameEl.focus();
+
+      return;
+
+    }
+
+
+    if(!eventWho){
+
+      setStatus(
+        "Falta seleccionar quién agenda.",
+        false,
+        true
+      );
+
+      whoEl.focus();
+
+      return;
+
+    }
+
+
+    if(
+      eventStart &&
+      eventEnd &&
+      eventEnd < eventStart
+    ){
+
+      setStatus(
+        "La hora de finalización no puede ser anterior a la de inicio.",
+        false,
+        true
+      );
+
+      return;
+
+    }
+
+
+    if(
+      paymentStatus === "Pendiente" &&
+      pendingRaw !== "" &&
+      Number(pendingRaw) < 0
+    ){
+
+      setStatus(
+        "La cantidad pendiente no puede ser negativa.",
+        false,
+        true
+      );
+
+      return;
+
+    }
+
+
+    saveBtnEl.disabled =
+      true;
+
+    saveBtnEl.textContent =
+      "Guardando…";
+
+
+    setStatus(
+      "Guardando evento en la nube…"
+    );
+
+
+    /* =========================
+       DATOS DEL EVENTO
+    ========================= */
+
+    const payload = {
+
+      event_date:
+        eventDate,
+
+      /*
+       * Se conserva event_time para
+       * compatibilidad con eventos
+       * existentes.
+       */
+
+      event_time:
+        eventStart ||
+        null,
+
+      start_time:
+        eventStart ||
+        null,
+
+      end_time:
+        eventEnd ||
+        null,
+
+      event_name:
+        eventName,
+
+      event_type:
+        eventType ||
+        null,
+
+      scheduled_by:
+        eventWho,
+
+      payment_status:
+        paymentStatus ||
+        null,
+
+      pending_amount:
+
+        paymentStatus === "Pendiente" &&
+        pendingRaw !== ""
+
+          ? Number(pendingRaw)
+
+          : null,
+
+      payment_method:
+        paymentMethod ||
+        null,
+
+      notes:
+        eventExtra,
+
+      updated_at:
+        new Date().toISOString()
+
+    };
+
+
+    /* =========================
+       INSERTAR / ACTUALIZAR
+    ========================= */
+
+    if(editing){
+
+      await api(
+
+        `/events?id=eq.${encodeURIComponent(
+          editing
+        )}`,
+
+        {
+
+          method:"PATCH",
+
+          headers:{
+            Prefer:
+              "return=minimal"
+          },
+
+          body:
+            JSON.stringify(payload)
+
+        }
+
+      );
+
+    }else{
+
+      await api(
+
+        "/events",
+
+        {
+
+          method:"POST",
+
+          headers:{
+            Prefer:
+              "return=minimal"
+          },
+
+          body:
+            JSON.stringify(payload)
+
+        }
+
+      );
+
+    }
+
+
+    closeModal();
+
+
+    const d =
+      new Date(
+        eventDate +
+        "T12:00:00"
+      );
+
+
+    month =
+      d.getMonth();
+
+    year =
+      2026;
+
+
+    await refresh();
+
+
+    setStatus(
+      "✅ Evento guardado y compartido.",
+      true
+    );
+
+
+  }catch(error){
+
+    console.error(error);
+
+
+    setStatus(
+      "ERROR AL GUARDAR: " +
+      error.message,
+      false,
+      true
+    );
+
+
+  }finally{
+
+    saveBtnEl.disabled =
+      false;
+
+    saveBtnEl.textContent =
+      "Guardar";
+
+  }
+
+}
+
+
+/* =========================================================
+   ELIMINAR EVENTO
+========================================================= */
+
+async function removeEvent(){
+
+  if(!editing){
+    return;
+  }
+
+
+  if(
+    !confirm(
+      "¿Eliminar este evento?"
     )
+  ){
+
+    return;
+
+  }
+
+
+  try{
+
+    await api(
+
+      `/events?id=eq.${encodeURIComponent(
+        editing
+      )}`,
+
+      {
+
+        method:"DELETE",
+
+        headers:{
+          Prefer:
+            "return=minimal"
+        }
+
+      }
+
+    );
+
+
+    closeModal();
+
+
+    editing =
+      null;
+
+
+    await refresh();
+
+
+  }catch(error){
+
+    console.error(error);
+
+
+    setStatus(
+      "ERROR AL ELIMINAR: " +
+      error.message,
+      false,
+      true
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   VOLVER A CONECTAR
+========================================================= */
+
+window.addEventListener(
+  "online",
+  refresh
 );
 
 
--- =========================================================
--- 4. ESTADOS DE PAGO
--- =========================================================
+/* =========================================================
+   INICIAR AGENDA
+========================================================= */
 
-ALTER TABLE public.events
-ADD CONSTRAINT events_payment_status_check
-CHECK (
-    payment_status IS NULL
-    OR payment_status IN (
-        'Pagado',
-        'Pendiente',
-        'Liquidado'
-    )
-);
+refresh();
 
+</script>
 
--- =========================================================
--- 5. MÉTODOS DE PAGO
--- =========================================================
-
-ALTER TABLE public.events
-ADD CONSTRAINT events_payment_method_check
-CHECK (
-    payment_method IS NULL
-    OR payment_method IN (
-        'Efectivo',
-        'Transferencia',
-        'Anticipo'
-    )
-);
-
-
--- =========================================================
--- 6. MONTO PENDIENTE
--- =========================================================
-
-ALTER TABLE public.events
-ADD CONSTRAINT events_pending_amount_check
-CHECK (
-    pending_amount IS NULL
-    OR pending_amount >= 0
-);
-
-
--- =========================================================
--- 7. OPCIONAL: VALORES POR DEFECTO
--- =========================================================
--- No modificamos eventos antiguos.
--- Los nuevos registros pueden utilizar estos valores.
-
-ALTER TABLE public.events
-ALTER COLUMN payment_status SET DEFAULT 'Pendiente';
-
-
--- =========================================================
--- 8. VERIFICAR QUE LAS COLUMNAS EXISTAN
--- =========================================================
-
-SELECT
-    column_name,
-    data_type,
-    column_default
-FROM information_schema.columns
-WHERE table_schema = 'public'
-  AND table_name = 'events'
-ORDER BY ordinal_position;
+</body>
+</html> 
