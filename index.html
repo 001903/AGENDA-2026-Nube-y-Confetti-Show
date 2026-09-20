@@ -2,11 +2,15 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
 <title>Mi Agenda 2026</title>
 
 <style>
-*{box-sizing:border-box}
+
+*{
+  box-sizing:border-box;
+}
 
 body{
   margin:0;
@@ -39,19 +43,22 @@ body{
   font-size:13px;
 }
 
-button,select,input,textarea{
-  font:inherit;
-}
-
 .nav{
   display:flex;
   gap:8px;
   align-items:center;
 }
 
+button,
+select,
+input,
+textarea{
+  font:inherit;
+}
+
 .nav button{
   border:0;
-  background:white;
+  background:#fff;
   border-radius:12px;
   padding:9px 13px;
   cursor:pointer;
@@ -79,7 +86,7 @@ button,select,input,textarea{
 
 .arrow{
   border:0;
-  background:white;
+  background:#fff;
   width:38px;
   height:38px;
   border-radius:50%;
@@ -87,9 +94,16 @@ button,select,input,textarea{
   box-shadow:0 2px 10px #00000010;
 }
 
+.theme-badge{
+  text-align:center;
+  margin:0 20px 10px;
+  font-size:14px;
+  font-weight:700;
+}
+
 .calendar{
   margin:0 20px;
-  background:white;
+  background:#fff;
   border-radius:20px;
   overflow:hidden;
   box-shadow:0 5px 25px #0000000d;
@@ -151,33 +165,32 @@ button,select,input,textarea{
   display:block;
 }
 
-.event-meta{
-  font-size:9px;
-  opacity:.8;
-  margin-top:2px;
+.hint{
+  text-align:center;
+  padding:10px;
+  color:#806f65;
+  font-size:12px;
 }
 
-.badge{
-  display:inline-block;
-  margin-top:3px;
-  padding:2px 5px;
-  border-radius:5px;
-  background:#f2e7dc;
-  font-size:9px;
+.status{
+  text-align:center;
+  font-size:12px;
+  padding:0 20px 10px;
+  color:#806f65;
+  min-height:28px;
 }
 
-.badge.pending{
-  font-weight:700;
-  background:#f4e0c9;
+.status.ok{
+  color:#52745a;
 }
 
-.badge.paid{
-  background:#dfeee0;
+.status.err{
+  color:#9b3f3f;
 }
 
 .panel{
   margin:20px;
-  background:white;
+  background:#fff;
   border-radius:18px;
   padding:18px;
   box-shadow:0 5px 25px #0000000d;
@@ -197,21 +210,6 @@ button,select,input,textarea{
   resize:vertical;
 }
 
-.status{
-  text-align:center;
-  font-size:12px;
-  color:#806f65;
-  padding:0 20px 10px;
-}
-
-.status.ok{
-  color:#52745a;
-}
-
-.status.err{
-  color:#9b3f3f;
-}
-
 .modal{
   display:none;
   position:fixed;
@@ -220,7 +218,7 @@ button,select,input,textarea{
   align-items:center;
   justify-content:center;
   padding:15px;
-  z-index:50;
+  z-index:20;
 }
 
 .modal.show{
@@ -230,10 +228,8 @@ button,select,input,textarea{
 .box{
   background:#fff;
   border-radius:20px;
-  width:min(560px,100%);
+  width:min(520px,100%);
   padding:22px;
-  max-height:92vh;
-  overflow:auto;
 }
 
 .box h2{
@@ -258,19 +254,7 @@ button,select,input,textarea{
   border:1px solid #d8ccc3;
   border-radius:10px;
   padding:9px;
-  background:white;
-}
-
-.field-row{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:12px;
-}
-
-.help{
-  font-size:11px;
-  color:#806f65;
-  margin-top:4px;
+  background:#fff;
 }
 
 .actions{
@@ -289,8 +273,13 @@ button,select,input,textarea{
 
 .save{
   background:#5b765f;
-  color:white;
+  color:#fff;
   font-weight:700;
+}
+
+.save:disabled{
+  opacity:.6;
+  cursor:wait;
 }
 
 .delete{
@@ -298,48 +287,29 @@ button,select,input,textarea{
   color:#8b3333;
 }
 
+
+/* CELULAR */
+
 @media(max-width:700px){
-
-  .top{
-    align-items:flex-start;
-  }
-
-  .brand{
-    font-size:20px;
-  }
-
-  .month h1{
-    font-size:23px;
-  }
-
-  .day{
-    min-height:85px;
-    padding:5px;
-  }
-
-  .event{
-    font-size:9px;
-  }
-
-  .week div{
-    padding:7px 2px;
-    font-size:10px;
-  }
 
   body{
     background:#f3eee9;
   }
 
   .app{
-    padding-bottom:90px;
+    padding-bottom:70px;
   }
 
   .top{
     position:sticky;
     top:0;
-    z-index:5;
+    z-index:10;
     background:#f3eee9;
-    padding:14px 14px 8px;
+    padding:14px;
+  }
+
+  .brand{
+    font-size:20px;
   }
 
   .sub{
@@ -352,7 +322,6 @@ button,select,input,textarea{
 
   .nav button{
     padding:10px 11px;
-    border-radius:12px;
   }
 
   .nav .add{
@@ -454,57 +423,69 @@ button,select,input,textarea{
     padding:12px;
   }
 
-  .field-row{
-    grid-template-columns:1fr;
-  }
-
   .actions{
     position:sticky;
     bottom:0;
-    background:white;
+    background:#fff;
     padding-top:10px;
   }
 
   .actions button{
     padding:12px 15px;
   }
+
 }
+
 </style>
 </head>
+
 
 <body>
 
 <div class="app">
 
+
   <!-- ENCABEZADO -->
+
   <div class="top">
 
     <div>
-      <div class="brand">📅 Mi Agenda</div>
+
+      <div class="brand">
+        📅 Mi Agenda 2026
+      </div>
 
       <div class="sub">
-        Septiembre · Octubre · Noviembre · Diciembre 2026
+        Agenda compartida · Septiembre a Diciembre
       </div>
+
     </div>
+
 
     <div class="nav">
 
-      <button onclick="go(-1)">
+      <button
+        type="button"
+        onclick="changeMonth(-1)">
         ‹
       </button>
 
-      <button onclick="today()">
+      <button
+        type="button"
+        onclick="goToday()">
         Hoy
       </button>
 
-      <button onclick="go(1)">
+      <button
+        type="button"
+        onclick="changeMonth(1)">
         ›
       </button>
 
       <button
+        type="button"
         class="add"
-        onclick="openEvent()"
-      >
+        onclick="openEvent()">
         ＋ Evento
       </button>
 
@@ -518,21 +499,29 @@ button,select,input,textarea{
   <div class="month">
 
     <button
+      type="button"
       class="arrow"
-      onclick="go(-1)"
-    >
+      onclick="changeMonth(-1)">
       ‹
     </button>
 
     <h1 id="monthTitle"></h1>
 
     <button
+      type="button"
       class="arrow"
-      onclick="go(1)"
-    >
+      onclick="changeMonth(1)">
       ›
     </button>
 
+  </div>
+
+
+  <!-- TEMA -->
+
+  <div
+    id="themeBadge"
+    class="theme-badge">
   </div>
 
 
@@ -542,33 +531,27 @@ button,select,input,textarea{
 
     <div
       class="week"
-      id="week"
-    ></div>
+      id="week">
+    </div>
 
     <div
       class="grid"
-      id="grid"
-    ></div>
+      id="grid">
+    </div>
 
   </div>
 
 
-  <div
-    style="
-      text-align:center;
-      padding:10px;
-      color:#806f65;
-      font-size:12px
-    "
-  >
+  <div class="hint">
     Toca cualquier día para agregar o editar un evento
   </div>
 
 
+  <!-- ESTADO DE CONEXIÓN -->
+
   <div
     class="status"
-    id="status"
-  >
+    id="status">
     Conectando con la agenda compartida…
   </div>
 
@@ -584,22 +567,20 @@ button,select,input,textarea{
     <textarea
       id="notes"
       class="notes"
-      placeholder="Escribe aquí tus notas, pendientes o recordatorios..."
-    ></textarea>
+      placeholder="Escribe aquí tus notas, pendientes o recordatorios...">
+    </textarea>
 
   </div>
+
 
 </div>
 
 
-<!-- =====================================================
-     MODAL DEL EVENTO
-===================================================== -->
+<!-- VENTANA PARA EVENTO -->
 
 <div
   class="modal"
-  id="modal"
->
+  id="modal">
 
   <div class="box">
 
@@ -608,108 +589,50 @@ button,select,input,textarea{
     </h2>
 
 
-    <!-- FECHA -->
-
     <div class="field">
 
-      <label>
+      <label for="date">
         Fecha
       </label>
 
       <input
         id="date"
         type="date"
-      >
+        min="2026-09-01"
+        max="2026-12-31">
 
     </div>
 
-
-    <!-- HORAS -->
-
-    <div class="field-row">
-
-      <div class="field">
-
-        <label>
-          Hora de inicio
-        </label>
-
-        <input
-          id="startTime"
-          type="time"
-        >
-
-      </div>
-
-
-      <div class="field">
-
-        <label>
-          Hora de finalización
-        </label>
-
-        <input
-          id="endTime"
-          type="time"
-        >
-
-      </div>
-
-    </div>
-
-
-    <!-- NOMBRE -->
 
     <div class="field">
 
-      <label>
+      <label for="time">
+        Horario
+      </label>
+
+      <input
+        id="time"
+        type="time">
+
+    </div>
+
+
+    <div class="field">
+
+      <label for="name">
         Nombre del evento
       </label>
 
       <input
         id="name"
-        placeholder="Ej. Baby shower, reunión, cita..."
-      >
+        placeholder="Ej. Reunión, cita, entrega...">
 
     </div>
 
 
-    <!-- TIPO DE EVENTO -->
-
     <div class="field">
 
-      <label>
-        Tipo de evento
-      </label>
-
-      <select id="eventType">
-
-        <option value="">
-          Selecciona tipo de evento
-        </option>
-
-        <option value="Baby shower">
-          Baby shower
-        </option>
-
-        <option value="Revelación de sexo">
-          Revelación de sexo
-        </option>
-
-        <option value="Despedida de soltera">
-          Despedida de soltera
-        </option>
-
-      </select>
-
-    </div>
-
-
-    <!-- QUIÉN AGENDA -->
-
-    <div class="field">
-
-      <label>
+      <label for="who">
         Quién agenda
       </label>
 
@@ -736,133 +659,34 @@ button,select,input,textarea{
     </div>
 
 
-    <!-- ESTADO DE PAGO -->
-
     <div class="field">
 
-      <label>
-        Estado de pago
-      </label>
-
-      <select
-        id="paymentStatus"
-        onchange="togglePendingAmount()"
-      >
-
-        <option value="">
-          Sin especificar
-        </option>
-
-        <option value="Pagado">
-          Pagado
-        </option>
-
-        <option value="Pendiente">
-          Pendiente
-        </option>
-
-        <option value="Liquidado">
-          Liquidado
-        </option>
-
-      </select>
-
-    </div>
-
-
-    <!-- MONTO PENDIENTE -->
-
-    <div
-      class="field"
-      id="pendingWrap"
-      style="display:none"
-    >
-
-      <label>
-        ¿Cuánto queda pendiente?
-      </label>
-
-      <input
-        id="pendingAmount"
-        type="number"
-        min="0"
-        step="0.01"
-        inputmode="decimal"
-        placeholder="Ej. 1500"
-      >
-
-      <div class="help">
-        Este campo aparece solamente cuando el estado es "Pendiente".
-      </div>
-
-    </div>
-
-
-    <!-- MÉTODO DE PAGO -->
-
-    <div class="field">
-
-      <label>
-        Método de pago
-      </label>
-
-      <select id="paymentMethod">
-
-        <option value="">
-          Selecciona método de pago
-        </option>
-
-        <option value="Efectivo">
-          Efectivo
-        </option>
-
-        <option value="Transferencia">
-          Transferencia
-        </option>
-
-        <option value="Anticipo">
-          Anticipo
-        </option>
-
-      </select>
-
-    </div>
-
-
-    <!-- NOTAS -->
-
-    <div class="field">
-
-      <label>
+      <label for="eventNotes">
         Notas
       </label>
 
       <textarea
         id="eventNotes"
         rows="3"
-        placeholder="Detalles del evento..."
-      ></textarea>
+        placeholder="Detalles del evento...">
+      </textarea>
 
     </div>
 
-
-    <!-- BOTONES -->
 
     <div class="actions">
 
       <button
         type="button"
         class="delete"
-        id="del"
-        onclick="removeEvent()"
-      >
+        id="deleteBtn"
+        onclick="deleteEvent()">
         Eliminar
       </button>
 
       <button
         type="button"
-        onclick="closeModal()"
-      >
+        onclick="closeModal()">
         Cancelar
       </button>
 
@@ -870,8 +694,7 @@ button,select,input,textarea{
         type="button"
         class="save"
         id="saveBtn"
-        onclick="saveEvent()"
-      >
+        onclick="saveEvent()">
         Guardar
       </button>
 
@@ -882,25 +705,26 @@ button,select,input,textarea{
 </div>
 
 
+
 <script>
 
-/* =========================================================
-   SUPABASE
-========================================================= */
+/* =========================================
+   CONEXIÓN CON SUPABASE
+   ========================================= */
 
 const SUPABASE_URL =
-  "https://emvzdewojqepmuhnmxqv.supabase.co";
+"https://emvzdewojqepmuhnmxqv.supabase.co";
 
 const SUPABASE_KEY =
-  "sb_publishable_1gAnnpuYenWJOuZOQ9pjIQ_Fn-A-sAG";
+"sb_publishable_1gAnnpuYenWJOuZOQ9pjIQ_Fn-A-sAG";
 
 const API =
-  SUPABASE_URL + "/rest/v1";
+SUPABASE_URL + "/rest/v1";
 
 
-/* =========================================================
+/* =========================================
    CONFIGURACIÓN
-========================================================= */
+   ========================================= */
 
 const months = [
   "Septiembre",
@@ -909,7 +733,7 @@ const months = [
   "Diciembre"
 ];
 
-const names = [
+const weekdays = [
   "Dom",
   "Lun",
   "Mar",
@@ -919,214 +743,214 @@ const names = [
   "Sáb"
 ];
 
+const themes = {
+
+  8:[
+    "🍂",
+    "Otoño"
+  ],
+
+  9:[
+    "🎃",
+    "Halloween"
+  ],
+
+  10:[
+    "🍁",
+    "Otoño acogedor"
+  ],
+
+  11:[
+    "🎄",
+    "Navidad"
+  ]
+
+};
+
+
 let month = 8;
+
 let year = 2026;
-let editing = null;
-let cacheEvents = [];
+
+let events = [];
+
+let editingId = null;
+
+let notesTimer = null;
 
 
-/* =========================================================
+/* =========================================
    ELEMENTOS
-========================================================= */
+   ========================================= */
 
 const $ = id =>
-  document.getElementById(id);
-
-const statusEl =
-  $("status");
-
-const notesEl =
-  $("notes");
-
-const modalEl =
-  $("modal");
-
-const modalTitleEl =
-  $("modalTitle");
-
-const dateEl =
-  $("date");
-
-const startTimeEl =
-  $("startTime");
-
-const endTimeEl =
-  $("endTime");
-
-const nameEl =
-  $("name");
-
-const eventTypeEl =
-  $("eventType");
-
-const whoEl =
-  $("who");
-
-const paymentStatusEl =
-  $("paymentStatus");
-
-const pendingAmountEl =
-  $("pendingAmount");
-
-const pendingWrapEl =
-  $("pendingWrap");
-
-const paymentMethodEl =
-  $("paymentMethod");
-
-const eventNotesEl =
-  $("eventNotes");
-
-const saveBtnEl =
-  $("saveBtn");
-
-const delBtnEl =
-  $("del");
-
-const monthTitleEl =
-  $("monthTitle");
-
-const weekEl =
-  $("week");
-
-const gridEl =
-  $("grid");
+document.getElementById(id);
 
 
-/* =========================================================
-   ESTADO
-========================================================= */
+/* =========================================
+   HEADERS SUPABASE
+   ========================================= */
 
-function setStatus(
-  text,
-  ok = false,
-  err = false
-){
+function headers(extra = {}){
 
-  statusEl.textContent =
-    text;
+  return Object.assign(
 
-  statusEl.className =
-    "status" +
-    (ok ? " ok" : "") +
-    (err ? " err" : "");
+    {
+      "apikey":SUPABASE_KEY,
+
+      "Authorization":
+      "Bearer " + SUPABASE_KEY,
+
+      "Content-Type":
+      "application/json"
+
+    },
+
+    extra
+
+  );
+
 }
 
 
-/* =========================================================
-   ESCAPAR TEXTO
-========================================================= */
+/* =========================================
+   MENSAJES
+   ========================================= */
+
+function setStatus(
+  text,
+  type = ""
+){
+
+  const el =
+  $("status");
+
+  el.textContent =
+  text;
+
+  el.className =
+  "status" +
+  (type ? " " + type : "");
+
+}
+
+
+/* =========================================
+   SEGURIDAD PARA MOSTRAR TEXTO
+   ========================================= */
 
 function esc(value){
 
-  return String(value ?? "")
-    .replace(
-      /[&<>"']/g,
-      character => ({
+  return String(
+    value ?? ""
+  ).replace(
+    /[&<>"']/g,
+
+    function(c){
+
+      return {
+
         "&":"&amp;",
         "<":"&lt;",
         ">":"&gt;",
         '"':"&quot;",
         "'":"&#039;"
-      })[character]
-    );
+
+      }[c];
+
+    }
+
+  );
 
 }
 
 
-/* =========================================================
-   FORMATO DE DINERO
-========================================================= */
+/* =========================================
+   VALIDAR FECHA
+   ========================================= */
 
-function money(value){
+function validDate(value){
 
-  if(
-    value === null ||
-    value === undefined ||
-    value === ""
-  ){
-    return "";
-  }
+  return /^2026-(09|10|11|12)-([0-2][0-9]|3[01])$/
+  .test(value);
 
-  return Number(value)
-    .toLocaleString(
-      "es-MX",
-      {
-        minimumFractionDigits:2,
-        maximumFractionDigits:2
-      }
-    );
 }
 
 
-/* =========================================================
-   PETICIONES A SUPABASE
-========================================================= */
+/* =========================================
+   PETICIÓN A SUPABASE
+   ========================================= */
 
 async function api(
   path,
   options = {}
 ){
 
-  const headers = {
-
-    apikey:
-      SUPABASE_KEY,
-
-    Authorization:
-      "Bearer " + SUPABASE_KEY,
-
-    "Content-Type":
-      "application/json",
-
-    ...(options.headers || {})
-
-  };
-
-
   const response =
-    await fetch(
-      API + path,
+  await fetch(
+
+    API + path,
+
+    Object.assign(
+
       {
-        ...options,
-        headers
-      }
-    );
+        headers:headers()
+      },
 
+      options
 
-  const text =
-    await response.text();
+    )
+
+  );
 
 
   let data = null;
 
 
-  try{
+  const text =
+  await response.text();
 
-    data =
-      text
-        ? JSON.parse(text)
-        : null;
 
-  }catch{
+  if(text){
 
-    data = text;
+    try{
+
+      data =
+      JSON.parse(text);
+
+    }catch{
+
+      data =
+      text;
+
+    }
 
   }
 
 
   if(!response.ok){
 
-    throw new Error(
+    const error =
+    new Error(
 
       data?.message ||
       data?.hint ||
-      data?.details ||
-      data?.error ||
-      text ||
-      ("HTTP " + response.status)
+      ("Error HTTP " + response.status)
 
     );
+
+
+    error.code =
+    data?.code;
+
+    error.details =
+    data?.details;
+
+    error.hint =
+    data?.hint;
+
+
+    throw error;
 
   }
 
@@ -1136,31 +960,36 @@ async function api(
 }
 
 
-/* =========================================================
+/* =========================================
    CARGAR EVENTOS
-========================================================= */
+   ========================================= */
 
 async function loadEvents(){
 
   try{
 
-    cacheEvents =
-      await api(
-        "/events?select=*&order=event_date.asc,start_time.asc,event_time.asc"
-      ) || [];
+    events =
+    await api(
+      "/events?select=*&order=event_date.asc,event_time.asc"
+    ) || [];
+
 
     return true;
 
   }catch(error){
 
-    console.error(error);
+    console.error(
+      "Error cargando eventos:",
+      error
+    );
+
 
     setStatus(
-      "No se pudo conectar con la agenda compartida: " +
+      "❌ No se pudo conectar con la agenda compartida: " +
       error.message,
-      false,
-      true
+      "err"
     );
+
 
     return false;
 
@@ -1169,21 +998,25 @@ async function loadEvents(){
 }
 
 
-/* =========================================================
+/* =========================================
    CARGAR NOTAS
-========================================================= */
+   ========================================= */
 
 async function loadNotes(){
 
   try{
 
     const data =
-      await api(
-        `/monthly_notes?select=notes&year=eq.${year}&month=eq.${month+1}&limit=1`
-      );
+    await api(
 
-    notesEl.value =
-      data?.[0]?.notes || "";
+      `/monthly_notes?select=notes&year=eq.${year}&month=eq.${month+1}&limit=1`
+
+    );
+
+
+    $("notes").value =
+    data?.[0]?.notes || "";
+
 
   }catch(error){
 
@@ -1197,133 +1030,75 @@ async function loadNotes(){
 }
 
 
-/* =========================================================
-   GUARDAR NOTAS AUTOMÁTICAMENTE
-========================================================= */
-
-let notesTimer = null;
-
-notesEl.addEventListener(
-  "input",
-  () => {
-
-    clearTimeout(
-      notesTimer
-    );
-
-    notesTimer =
-      setTimeout(
-        saveNotes,
-        700
-      );
-
-  }
-);
-
-
-async function saveNotes(){
-
-  try{
-
-    await api(
-      "/monthly_notes",
-      {
-        method:"POST",
-
-        headers:{
-          Prefer:
-            "resolution=merge-duplicates,return=minimal"
-        },
-
-        body:
-          JSON.stringify({
-            year:year,
-            month:month+1,
-            notes:notesEl.value,
-            updated_at:
-              new Date().toISOString()
-          })
-
-      }
-    );
-
-
-    setStatus(
-      "Notas guardadas en la agenda compartida.",
-      true
-    );
-
-  }catch(error){
-
-    console.error(error);
-
-    setStatus(
-      "ERROR AL GUARDAR NOTAS: " +
-      error.message,
-      false,
-      true
-    );
-
-  }
-
-}
-
-
-/* =========================================================
-   RENDERIZAR CALENDARIO
-========================================================= */
+/* =========================================
+   DIBUJAR CALENDARIO
+   ========================================= */
 
 async function render(){
 
-  monthTitleEl.textContent =
-    months[month-8] +
-    " " +
-    year;
+  $("monthTitle").textContent =
+  months[month - 8] +
+  " " +
+  year;
 
 
-  weekEl.innerHTML =
-    names
-      .map(
-        name =>
-          `<div>${name}</div>`
-      )
-      .join("");
+  $("week").innerHTML =
+  weekdays
+  .map(
+    day => `<div>${day}</div>`
+  )
+  .join("");
 
 
-  gridEl.innerHTML =
-    "";
+  const theme =
+  themes[month];
 
 
-  const first =
-    new Date(
-      year,
-      month,
-      1
-    ).getDay();
+  $("themeBadge").textContent =
+  theme[0] +
+  " Tema: " +
+  theme[1];
+
+
+  $("grid").innerHTML =
+  "";
+
+
+  const firstDay =
+  new Date(
+    year,
+    month,
+    1
+  ).getDay();
 
 
   const days =
-    new Date(
-      year,
-      month + 1,
-      0
-    ).getDate();
+  new Date(
+    year,
+    month + 1,
+    0
+  ).getDate();
 
 
   for(
     let i = 0;
-    i < first;
+    i < firstDay;
     i++
   ){
 
-    gridEl.innerHTML +=
-      "<div class='day'></div>";
+    $("grid").insertAdjacentHTML(
+
+      "beforeend",
+
+      "<div class='day'></div>"
+
+    );
 
   }
 
 
   const now =
-    new Date();
+  new Date();
 
 
   for(
@@ -1332,207 +1107,80 @@ async function render(){
     d++
   ){
 
-    const ds =
-      `${year}-${String(month+1).padStart(2,"0")}-${String(d).padStart(2,"0")}`;
+    const dateString =
 
+    `${year}-${String(month+1).padStart(2,"0")}-${String(d).padStart(2,"0")}`;
 
-    const cls =
 
-      (
-        now.getFullYear() === year &&
-        now.getMonth() === month &&
-        now.getDate() === d
-      )
+    const isToday =
 
-      ? "day today"
+    now.getFullYear() === year &&
+    now.getMonth() === month &&
+    now.getDate() === d;
 
-      : "day";
 
+    const dayEvents =
 
-    const eventsForDay =
+    events.filter(
 
-      cacheEvents
-        .filter(
-          event =>
-            event.event_date === ds
-        )
-        .sort(
-          (a,b) =>
-            (
-              a.start_time ||
-              a.event_time ||
-              ""
-            ).localeCompare(
-              b.start_time ||
-              b.event_time ||
-              ""
-            )
-        );
+      event =>
+      event.event_date === dateString
 
+    );
 
-    const eventHtml =
 
-      eventsForDay
-        .map(event => {
+    let html =
 
-          const start =
-            event.start_time ||
-            event.event_time ||
-            "";
+    `<div class="day${isToday ? " today" : ""}"
+          onclick="openEvent('${dateString}')">
 
+      <div class="num">
+        ${d}
+      </div>`;
 
-          const end =
-            event.end_time ||
-            "";
 
+    for(
+      const event of dayEvents
+    ){
 
-          const schedule =
-            start
+      html +=
 
-              ? start.slice(0,5) +
-                (
-                  end
-                    ? "–" +
-                      end.slice(0,5)
-                    : ""
-                )
+      `<div
+        class="event"
+        onclick="event.stopPropagation();openEvent('${dateString}','${event.id}')">
 
-              : "";
+        <strong>
 
+          ${
+            event.event_time
+            ?
+            esc(
+              event.event_time.slice(0,5)
+            ) + " "
+            :
+            ""
+          }
 
-          const type =
-            event.event_type ||
-            "";
+          ${esc(event.event_name)}
 
+        </strong>
 
-          const payment =
-            event.payment_status ||
-            "";
+        ${esc(event.scheduled_by)}
 
+      </div>`;
 
-          const pending =
+    }
 
-            payment === "Pendiente" &&
 
-            event.pending_amount !== null &&
-            event.pending_amount !== undefined &&
-            event.pending_amount !== ""
+    html +=
+    "</div>";
 
-              ?
 
-                ` · $${money(
-                  event.pending_amount
-                )}`
-
-              : "";
-
-
-          const paymentClass =
-
-            payment === "Pendiente"
-
-              ? "pending"
-
-              :
-
-                (
-                  payment === "Pagado" ||
-                  payment === "Liquidado"
-                )
-
-                  ? "paid"
-
-                  : "";
-
-
-          return `
-
-            <div
-              class="event"
-              onclick="
-                event.stopPropagation();
-                openEvent(
-                  '${ds}',
-                  '${event.id}'
-                )
-              "
-            >
-
-              <strong>
-
-                ${esc(schedule)}
-                ${esc(event.event_name)}
-
-              </strong>
-
-
-              <span>
-
-                ${esc(
-                  event.scheduled_by || ""
-                )}
-
-              </span>
-
-
-              ${
-                type
-
-                  ?
-
-                    `
-                    <div class="event-meta">
-                      ${esc(type)}
-                    </div>
-                    `
-
-                  : ""
-              }
-
-
-              ${
-                payment
-
-                  ?
-
-                    `
-                    <div
-                      class="badge ${paymentClass}"
-                    >
-                      ${esc(payment)}
-                      ${esc(pending)}
-                    </div>
-                    `
-
-                  : ""
-              }
-
-            </div>
-
-          `;
-
-        })
-        .join("");
-
-
-    gridEl.innerHTML += `
-
-      <div
-        class="${cls}"
-        onclick="
-          openEvent('${ds}')
-        "
-      >
-
-        <div class="num">
-          ${d}
-        </div>
-
-        ${eventHtml}
-
-      </div>
-
-    `;
+    $("grid")
+    .insertAdjacentHTML(
+      "beforeend",
+      html
+    );
 
   }
 
@@ -1542,29 +1190,29 @@ async function render(){
 }
 
 
-/* =========================================================
-   REFRESCAR AGENDA
-========================================================= */
+/* =========================================
+   ACTUALIZAR
+   ========================================= */
 
 async function refresh(){
 
   setStatus(
-    "Actualizando agenda…"
+    "☁️ Actualizando agenda…"
   );
 
 
-  const ok =
-    await loadEvents();
+  const connected =
+  await loadEvents();
 
 
-  if(ok){
+  if(connected){
 
     await render();
 
 
     setStatus(
-      "Agenda compartida y actualizada.",
-      true
+      "☁️ Agenda compartida y actualizada.",
+      "ok"
     );
 
   }
@@ -1572,19 +1220,20 @@ async function refresh(){
 }
 
 
-/* =========================================================
-   NAVEGACIÓN
-========================================================= */
+/* =========================================
+   CAMBIAR MES
+   ========================================= */
 
-function go(direction){
+function changeMonth(
+  amount
+){
 
-  month += direction;
+  month += amount;
 
 
   if(month < 8){
 
     month = 11;
-    year = 2026;
 
   }
 
@@ -1592,8 +1241,44 @@ function go(direction){
   if(month > 11){
 
     month = 8;
+
+  }
+
+
+  refresh();
+
+}
+
+
+/* =========================================
+   BOTÓN HOY
+   ========================================= */
+
+function goToday(){
+
+  const now =
+  new Date();
+
+
+  if(
+
+    now.getFullYear() === 2026 &&
+    now.getMonth() >= 8 &&
+    now.getMonth() <= 11
+
+  ){
+
     year = 2026;
 
+    month =
+    now.getMonth();
+
+  }else{
+
+    year = 2026;
+
+    month = 8;
+
   }
 
 
@@ -1602,398 +1287,273 @@ function go(direction){
 }
 
 
-function today(){
-
-  year = 2026;
-  month = 8;
-
-  refresh();
-
-}
-
-
-/* =========================================================
-   MOSTRAR / OCULTAR MONTO PENDIENTE
-========================================================= */
-
-function togglePendingAmount(){
-
-  const show =
-    paymentStatusEl.value === "Pendiente";
-
-
-  pendingWrapEl.style.display =
-    show
-      ? "block"
-      : "none";
-
-
-  if(!show){
-
-    pendingAmountEl.value =
-      "";
-
-  }
-
-}
-
-
-/* =========================================================
+/* =========================================
    ABRIR EVENTO
-========================================================= */
+   ========================================= */
 
 function openEvent(
-  ds = null,
+  date = null,
   id = null
 ){
 
-  editing = id;
+  editingId =
+  id
+  ?
+  String(id)
+  :
+  null;
 
 
   const event =
-
-    id
-
-      ? cacheEvents.find(
-          item =>
-            String(item.id) ===
-            String(id)
-        )
-
-      : null;
-
-
-  modalTitleEl.textContent =
-
-    event
-      ? "Editar evento"
-      : "Nuevo evento";
+  id
+  ?
+  events.find(
+    item =>
+    String(item.id) ===
+    String(id)
+  )
+  :
+  null;
 
 
-  delBtn.style.display =
-    event
-      ? "block"
-      : "none";
+  $("modalTitle").textContent =
+  event
+  ?
+  "Editar evento"
+  :
+  "Nuevo evento";
 
 
-  dateEl.value =
-
-    event
-
-      ? event.event_date
-
-      :
-
-        (
-          ds ||
-          `${year}-${String(month+1).padStart(2,"0")}-01`
-        );
+  $("deleteBtn").style.display =
+  event
+  ?
+  "block"
+  :
+  "none";
 
 
-  startTimeEl.value =
+  $("date").value =
 
-    event?.start_time
-
-      ? event.start_time.slice(0,5)
-
-      :
-
-        (
-          event?.event_time
-            ? event.event_time.slice(0,5)
-            : ""
-        );
+  event
+  ?
+  event.event_date
+  :
+  (
+    date ||
+    `${year}-${String(month+1).padStart(2,"0")}-01`
+  );
 
 
-  endTimeEl.value =
+  $("time").value =
 
-    event?.end_time
-      ? event.end_time.slice(0,5)
-      : "";
-
-
-  nameEl.value =
-    event?.event_name ||
-    "";
+  event?.event_time
+  ?
+  event.event_time.slice(0,5)
+  :
+  "";
 
 
-  eventTypeEl.value =
-    event?.event_type ||
-    "";
+  $("name").value =
+  event?.event_name ||
+  "";
 
 
-  whoEl.value =
-    event?.scheduled_by ||
-    "";
+  $("who").value =
+  event?.scheduled_by ||
+  "";
 
 
-  paymentStatusEl.value =
-    event?.payment_status ||
-    "";
+  $("eventNotes").value =
+  event?.notes ||
+  "";
 
 
-  pendingAmountEl.value =
-    event?.pending_amount ??
-    "";
+  $("modal")
+  .classList
+  .add("show");
 
 
-  paymentMethodEl.value =
-    event?.payment_method ||
-    "";
-
-
-  eventNotesEl.value =
-    event?.notes ||
-    "";
-
-
-  togglePendingAmount();
-
-
-  modalEl.classList.add(
-    "show"
+  setTimeout(
+    () =>
+    $("name").focus(),
+    50
   );
 
 }
 
 
-/* =========================================================
-   CERRAR MODAL
-========================================================= */
+/* =========================================
+   CERRAR VENTANA
+   ========================================= */
 
 function closeModal(){
 
-  modalEl.classList.remove(
-    "show"
-  );
+  $("modal")
+  .classList
+  .remove("show");
+
+
+  editingId =
+  null;
 
 }
 
 
-/* =========================================================
+/* =========================================
    GUARDAR EVENTO
-========================================================= */
+   ========================================= */
 
 async function saveEvent(){
 
-  try{
-
-    const eventDate =
-      dateEl.value;
-
-    const eventStart =
-      startTimeEl.value;
-
-    const eventEnd =
-      endTimeEl.value;
-
-    const eventName =
-      nameEl.value.trim();
-
-    const eventType =
-      eventTypeEl.value;
-
-    const eventWho =
-      whoEl.value;
-
-    const paymentStatus =
-      paymentStatusEl.value;
-
-    const pendingRaw =
-      pendingAmountEl.value;
-
-    const paymentMethod =
-      paymentMethodEl.value;
-
-    const eventExtra =
-      eventNotesEl.value.trim();
+  const date =
+  $("date").value;
 
 
-    /* =========================
-       VALIDACIONES
-    ========================= */
-
-    if(!eventDate){
-
-      setStatus(
-        "Falta seleccionar la fecha.",
-        false,
-        true
-      );
-
-      return;
-
-    }
+  const time =
+  $("time").value;
 
 
-    if(!eventName){
-
-      setStatus(
-        "Falta escribir el nombre del evento.",
-        false,
-        true
-      );
-
-      nameEl.focus();
-
-      return;
-
-    }
+  const name =
+  $("name")
+  .value
+  .trim();
 
 
-    if(!eventWho){
-
-      setStatus(
-        "Falta seleccionar quién agenda.",
-        false,
-        true
-      );
-
-      whoEl.focus();
-
-      return;
-
-    }
+  const who =
+  $("who").value;
 
 
-    if(
-      eventStart &&
-      eventEnd &&
-      eventEnd < eventStart
-    ){
-
-      setStatus(
-        "La hora de finalización no puede ser anterior a la de inicio.",
-        false,
-        true
-      );
-
-      return;
-
-    }
+  const notes =
+  $("eventNotes")
+  .value
+  .trim();
 
 
-    if(
-      paymentStatus === "Pendiente" &&
-      pendingRaw !== "" &&
-      Number(pendingRaw) < 0
-    ){
+  /* VALIDACIONES */
 
-      setStatus(
-        "La cantidad pendiente no puede ser negativa.",
-        false,
-        true
-      );
-
-      return;
-
-    }
-
-
-    saveBtnEl.disabled =
-      true;
-
-    saveBtnEl.textContent =
-      "Guardando…";
-
+  if(!validDate(date)){
 
     setStatus(
-      "Guardando evento en la nube…"
+      "❌ Selecciona una fecha entre septiembre y diciembre de 2026.",
+      "err"
     );
 
+    return;
 
-    /* =========================
-       DATOS DEL EVENTO
-    ========================= */
+  }
+
+
+  if(!name){
+
+    setStatus(
+      "❌ Escribe el nombre del evento.",
+      "err"
+    );
+
+    $("name").focus();
+
+    return;
+
+  }
+
+
+  if(
+
+    ![
+      "Vania",
+      "Isabel",
+      "Alizee"
+    ].includes(who)
+
+  ){
+
+    setStatus(
+      "❌ Selecciona quién agenda.",
+      "err"
+    );
+
+    $("who").focus();
+
+    return;
+
+  }
+
+
+  const button =
+  $("saveBtn");
+
+
+  button.disabled =
+  true;
+
+
+  button.textContent =
+  "Guardando…";
+
+
+  setStatus(
+    "☁️ Guardando evento en la nube…"
+  );
+
+
+  try{
 
     const payload = {
 
       event_date:
-        eventDate,
-
-      /*
-       * Se conserva event_time para
-       * compatibilidad con eventos
-       * existentes.
-       */
+      date,
 
       event_time:
-        eventStart ||
-        null,
-
-      start_time:
-        eventStart ||
-        null,
-
-      end_time:
-        eventEnd ||
-        null,
+      time || null,
 
       event_name:
-        eventName,
-
-      event_type:
-        eventType ||
-        null,
+      name,
 
       scheduled_by:
-        eventWho,
-
-      payment_status:
-        paymentStatus ||
-        null,
-
-      pending_amount:
-
-        paymentStatus === "Pendiente" &&
-        pendingRaw !== ""
-
-          ? Number(pendingRaw)
-
-          : null,
-
-      payment_method:
-        paymentMethod ||
-        null,
+      who,
 
       notes:
-        eventExtra,
+      notes,
 
       updated_at:
-        new Date().toISOString()
+      new Date().toISOString()
 
     };
 
 
-    /* =========================
-       INSERTAR / ACTUALIZAR
-    ========================= */
+    /* EDITAR */
 
-    if(editing){
+    if(editingId){
 
       await api(
 
-        `/events?id=eq.${encodeURIComponent(
-          editing
-        )}`,
+        `/events?id=eq.${encodeURIComponent(editingId)}`,
 
         {
 
           method:"PATCH",
 
-          headers:{
-            Prefer:
-              "return=minimal"
-          },
+          headers:
+          headers({
+
+            "Prefer":
+            "return=minimal"
+
+          }),
 
           body:
-            JSON.stringify(payload)
+          JSON.stringify(payload)
 
         }
 
       );
 
-    }else{
+    }
+
+
+    /* CREAR */
+
+    else{
 
       await api(
 
@@ -2003,13 +1563,16 @@ async function saveEvent(){
 
           method:"POST",
 
-          headers:{
-            Prefer:
-              "return=minimal"
-          },
+          headers:
+          headers({
+
+            "Prefer":
+            "return=minimal"
+
+          }),
 
           body:
-            JSON.stringify(payload)
+          JSON.stringify(payload)
 
         }
 
@@ -2018,73 +1581,97 @@ async function saveEvent(){
     }
 
 
+    /* CERRAR */
+
     closeModal();
 
 
-    const d =
-      new Date(
-        eventDate +
-        "T12:00:00"
-      );
+    /* IR AL MES DEL EVENTO */
+
+    year =
+    2026;
 
 
     month =
-      d.getMonth();
+    new Date(
+      date + "T12:00:00"
+    ).getMonth();
 
-    year =
-      2026;
 
+    /* RECARGAR DESDE LA NUBE */
 
     await refresh();
 
 
     setStatus(
-      "✅ Evento guardado y compartido.",
-      true
+      "✅ Evento guardado y compartido para todos.",
+      "ok"
     );
 
 
   }catch(error){
 
-    console.error(error);
+    console.error(
+      "ERROR GUARDANDO EVENTO:",
+      error
+    );
+
+
+    let message =
+    error.message ||
+    "Error desconocido";
+
+
+    if(error.code){
+
+      message +=
+      " [" +
+      error.code +
+      "]";
+
+    }
 
 
     setStatus(
-      "ERROR AL GUARDAR: " +
-      error.message,
-      false,
-      true
+      "❌ NO SE GUARDÓ: " +
+      message,
+      "err"
     );
 
 
   }finally{
 
-    saveBtnEl.disabled =
-      false;
+    button.disabled =
+    false;
 
-    saveBtnEl.textContent =
-      "Guardar";
+
+    button.textContent =
+    "Guardar";
 
   }
 
 }
 
 
-/* =========================================================
+/* =========================================
    ELIMINAR EVENTO
-========================================================= */
+   ========================================= */
 
-async function removeEvent(){
+async function deleteEvent(){
 
-  if(!editing){
+  if(!editingId){
+
     return;
+
   }
 
 
   if(
+
     !confirm(
       "¿Eliminar este evento?"
     )
+
   ){
 
     return;
@@ -2094,20 +1681,26 @@ async function removeEvent(){
 
   try{
 
+    setStatus(
+      "Eliminando evento…"
+    );
+
+
     await api(
 
-      `/events?id=eq.${encodeURIComponent(
-        editing
-      )}`,
+      `/events?id=eq.${encodeURIComponent(editingId)}`,
 
       {
 
         method:"DELETE",
 
-        headers:{
-          Prefer:
-            "return=minimal"
-        }
+        headers:
+        headers({
+
+          "Prefer":
+          "return=minimal"
+
+        })
 
       }
 
@@ -2117,23 +1710,26 @@ async function removeEvent(){
     closeModal();
 
 
-    editing =
-      null;
-
-
     await refresh();
+
+
+    setStatus(
+      "✅ Evento eliminado para todos.",
+      "ok"
+    );
 
 
   }catch(error){
 
-    console.error(error);
+    console.error(
+      error
+    );
 
 
     setStatus(
-      "ERROR AL ELIMINAR: " +
+      "❌ NO SE PUDO ELIMINAR: " +
       error.message,
-      false,
-      true
+      "err"
     );
 
   }
@@ -2141,9 +1737,122 @@ async function removeEvent(){
 }
 
 
-/* =========================================================
-   VOLVER A CONECTAR
-========================================================= */
+/* =========================================
+   GUARDAR NOTAS
+   ========================================= */
+
+async function saveNotes(){
+
+  try{
+
+    await api(
+
+      "/monthly_notes",
+
+      {
+
+        method:"POST",
+
+        headers:
+        headers({
+
+          "Prefer":
+          "resolution=merge-duplicates,return=minimal"
+
+        }),
+
+        body:
+        JSON.stringify({
+
+          year:
+          year,
+
+          month:
+          month + 1,
+
+          notes:
+          $("notes").value
+
+        })
+
+      }
+
+    );
+
+
+    setStatus(
+      "📝 Notas guardadas y compartidas.",
+      "ok"
+    );
+
+
+  }catch(error){
+
+    console.error(
+      error
+    );
+
+
+    setStatus(
+      "❌ No se pudieron guardar las notas: " +
+      error.message,
+      "err"
+    );
+
+  }
+
+}
+
+
+/* =========================================
+   GUARDAR NOTAS AUTOMÁTICAMENTE
+   ========================================= */
+
+$("notes")
+.addEventListener(
+  "input",
+  function(){
+
+    clearTimeout(
+      notesTimer
+    );
+
+
+    notesTimer =
+    setTimeout(
+      saveNotes,
+      700
+    );
+
+  }
+);
+
+
+/* =========================================
+   CERRAR MODAL AL TOCAR FUERA
+   ========================================= */
+
+$("modal")
+.addEventListener(
+  "click",
+  function(event){
+
+    if(
+      event.target ===
+      $("modal")
+    ){
+
+      closeModal();
+
+    }
+
+  }
+);
+
+
+/* =========================================
+   SI REGRESA INTERNET
+   ========================================= */
 
 window.addEventListener(
   "online",
@@ -2151,13 +1860,13 @@ window.addEventListener(
 );
 
 
-/* =========================================================
+/* =========================================
    INICIAR AGENDA
-========================================================= */
+   ========================================= */
 
 refresh();
 
 </script>
 
 </body>
-</html> 
+</html>
